@@ -1,12 +1,12 @@
-# Dotfiles Setup
+# Мои dotfiles
 
 Этот скрипт настраивает dotfiles, перемещая конфигурации nix, i3 и i3status в директорию `~/dotfiles/` и создавая символические ссылки для их использования.
 
-## Installation
+## Установка
 
    ```bash
-   git clone https://github.com/Split174/split174-nixos-i3.git
-   cd split174-nixos-i3
+   git clone https://github.com/Split174/split174-dotfiles.git ~/dotfiles
+   cd dotfiles
    ```
 
    ```bash

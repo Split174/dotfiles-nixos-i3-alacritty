@@ -116,18 +116,29 @@
       git
       restic
       xfce.thunar
-      xfce.thunar-archive-plugin
-      vscode
+        (vscode-with-extensions.override {
+          vscodeExtensions = with vscode-extensions; [
+            bbenoist.nix
+          ];
+        })
       steam
       unzip
       flameshot
       xfce.mousepad
+      #networkmanager-openconnect
       #i3status
       #i3blocks
     ];
   };
 
   environment.shells = with pkgs; [ zsh ];
+
+  environment.variables = rec {
+    GIT_AUTHOR_NAME  = "Split174";
+    GIT_AUTHOR_EMAIL = "sergei.popov174@gmail.com";
+    GIT_COMMITTER_NAME = "Split174";
+    GIT_COMMITTER_EMAIL = "sergei.popov174@gmail.com";
+  };
 
   programs.zsh = {
     enable = true;
