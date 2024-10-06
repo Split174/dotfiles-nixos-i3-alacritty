@@ -1,0 +1,113 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+#        color_good = "#00e6ac"
+#		 color_bad = "#ff0000"
+#        color_degraded = "#ffff66"
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+  output_format = "i3bar"
+  colors = true
+  #color_good = "#2E588E"
+  #color_degraded = "#FFFF00"
+  #color_bad = "#FF0000"
+  interval = 1
+  "markup"="pango"
+}
+
+order += "disk /"
+order += "wireless _first_"
+#order += "ethernet _first_"
+#order += "battery all"
+#order += "battery all"
+#order += "load"
+order += "cpu_temperature 0"
+#order += "cpu_temperature 1"
+#order += "cpu_temperature 2"
+#order += "cpu_temperature 3"
+#order += "cpu_temperature 4"
+order += "volume master"
+order += "tztime local"
+
+ipv6 {
+    format_up = "%ip"
+    format_down = ""
+}
+
+wireless _first_ {
+# format_up = "W: (%quality at %essid) %ip"
+# format_down = "W: down"
+format_up = "<span color='#FFFFFF'>  %essid (%quality) %ip</span>"
+format_down = "" #"  down"
+}
+
+
+
+ethernet _first_ {
+# if you use %speed, i3status requires root privileges
+format_up = "<span color='#FFFFFF'>%ip | %speed </span>"
+format_down = " no lan "
+}
+
+battery all {
+format = "<span color='#FEFF72'> %status: %percentage </span>"   // %remaining %emptytime"
+format_down = "No battery"
+#'#fa4c7e'
+        status_chr = "<span color='#00e64d'>[  ]  </span> "
+        status_bat = "<span color='#8080ff' >[   ] </span>"
+        status_unk = "[? ukwn ] "
+        status_full = "<span color='#66FF99'> [  ] </span>"
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+#       last_full_capacity = true
+        hide_seconds = true
+        integer_battery_capacity = true
+}
+
+tztime local {
+        format = " %d.%m.%Y  %H:%M"
+}
+
+load {
+format = "%1min"
+}
+
+cpu_temperature 0 {
+        format = " %degrees 糖 "
+        #path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input"
+	path = "/sys/devices/pci0000:00/0000:00:08.1/0000:0b:00.0/hwmon/hwmon*/temp1_input"
+}
+cpu_temperature 1 {
+        format = "T: %degrees °C"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp2_input"
+}
+cpu_temperature 2 {
+        format = "T: %degrees °C"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp3_input"
+}
+cpu_temperature 3 {
+        format = "T: %degrees °C"
+		path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp4_input"
+}
+cpu_temperature 4 {
+        format = "T: %degrees °C"
+		path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp5_input"
+}
+
+
+disk "/" {
+        # format = " hdd %avail "
+        format = " ⛁ %avail "
+}
+
+volume master {
+	format = " %volume"
+        format_muted = " -%volume-"
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
+
