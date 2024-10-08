@@ -46,7 +46,7 @@ bindsym Print exec --no-startup-id $preferredScreenCaptureTool
 # - You can change the preferredTerminalEmulator variable
 # - alacritty & xfce4-terminal can also be started using their individual keybindings
 
-bindsym $super+Return exec --no-startup-id zsh
+bindsym $super+Return exec --no-startup-id alacritty
 bindsym $super+t exec xfce4-terminal
 
 # set font
@@ -58,6 +58,7 @@ floating_modifier $super
 #autostart
 exec --no-startup-id setxkbmap -layout us -option; setxkbmap -layout "us,ru" -option grp:caps_toggle
 exec --no-startup-id picom
+exec --no-startup-id flameshot
 exec --no-startup-id ~/.fehbg
 exec --no-startup-id xsettingsd &
 exec --no-startup-id pasystray
@@ -69,9 +70,7 @@ exec --no-startup-id dunst
 #exec --no-startup-id redshift
 exec --no-startup-id desktop-items
 exec --no-startup-id nm-applet
-exec --no-startup-id pamac-tray
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id xfce4-power-manager
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id setcursor
 #exec_always --no-startup-id ${HOME}/.config/polybar/launch.sh
@@ -233,6 +232,7 @@ bindsym $super+n border normal
 # Start i3bar to display a workspace bar
 
 bar {
+    font pango:SauceCodePro Nerd Font 12.000000
 	status_command i3status
 	#strip_workspace_numbers yes|no
 	#strip_workspace_name yes|no
@@ -268,8 +268,6 @@ for_window [class="azote"] floating enable sticky enable border normal
 for_window [class="Oblogout"] fullscreen enable
 for_window [class="octopi"] floating enable
 for_window [title="About Pale Moon"] floating enable
-for_window [class="Pamac-manager"] floating enable
-for_window [class="Pamac-updater"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Qtconfig-qt4"] floating enable border normal
 for_window [class="qt5ct"] floating enable sticky enable border normal

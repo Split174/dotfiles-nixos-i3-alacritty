@@ -76,7 +76,7 @@ format = "%1min"
 }
 
 cpu_temperature 0 {
-        format = " %degrees 糖 "
+        format = " %degrees  "
         #path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input"
 	path = "/sys/devices/pci0000:00/0000:00:08.1/0000:0b:00.0/hwmon/hwmon*/temp1_input"
 }
@@ -104,8 +104,8 @@ disk "/" {
 }
 
 volume master {
-	format = " %volume"
-        format_muted = " -%volume-"
+	format = "󰕾 %volume"
+        format_muted = "󰖁 -%volume-"
         device = "default"
         mixer = "Master"
         mixer_idx = 0

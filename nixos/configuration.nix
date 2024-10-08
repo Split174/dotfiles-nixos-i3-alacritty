@@ -20,6 +20,10 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+  
+  # Docker
+
+  virtualisation.docker.enable = true;
 
   # Networking
   networking = {
@@ -88,15 +92,23 @@
   users.users.serj = {
     isNormalUser = true;
     description = "serj";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       neofetch
+      alacritty
+
       telegram-desktop
       mattermost-desktop
-      rofi
+      
       zsh
       git
+      
       restic
+
+      pwvucontrol
+      
+      networkmanagerapplet
+      networkmanager-openconnect
       xfce.thunar
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
@@ -117,6 +129,12 @@
     GIT_COMMITTER_NAME = "Split174";
     GIT_COMMITTER_EMAIL = "sergei.popov174@gmail.com";
   };
+
+  # Fonts
+
+  fonts.packages = with pkgs; [
+    nerdfonts
+  ];  
 
   # Shell Configuration
   environment.shells = with pkgs; [ zsh ];
