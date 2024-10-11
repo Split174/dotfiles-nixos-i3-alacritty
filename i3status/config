@@ -68,7 +68,7 @@ format_down = "No battery"
 }
 
 tztime local {
-        format = " %d.%m.%Y  %H:%M"
+        format = " %d.%m.%Y %H:%M"
 }
 
 load {
