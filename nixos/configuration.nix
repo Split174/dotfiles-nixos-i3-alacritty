@@ -102,7 +102,9 @@
       
       zsh
       git
-      
+      kubectl
+      gnumake
+
       restic
 
       pwvucontrol
@@ -113,6 +115,7 @@
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
+          redhat.vscode-yaml
         ];
       })
       steam
