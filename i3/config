@@ -144,8 +144,10 @@ bindsym $super+v split v
 # enter fullscreen mode for the focused container
 bindsym $super+f fullscreen toggle
 
-# change container layout split
-bindsym $super+s layout toggle split
+# change container layout (stacked, tabbed, toggle split)
+bindsym $super+s layout stacking
+bindsym $super+g layout tabbed
+bindsym $super+e layout toggle split
 
 # toggle tiling / floating
 bindsym $super+space floating toggle
