@@ -51,16 +51,16 @@
   services.headscale = {
     enable = true;
     address = "0.0.0.0";
-    port = 80;
+    port = 8443;
     user = "vdsina01";
     settings = {
-      server_url = "https://head.themiple.ru:80";
+      server_url = "https://head.themiple.ru:8443";
     };
   };
   services.fail2ban.enable = true;
   services.tailscale.enable = true;
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 80 ];
+  networking.firewall.allowedTCPPorts = [ 22 8443 ];
 
   system.stateVersion = "24.05";
 }
