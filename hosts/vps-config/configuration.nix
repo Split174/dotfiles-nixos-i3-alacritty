@@ -25,6 +25,7 @@
     ];
   };
 
+  nix.settings.trusted-users = [ "root" "@wheel" ];
   security.sudo.wheelNeedsPassword = false;
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -55,6 +56,9 @@
     user = "vdsina01";
     settings = {
       server_url = "https://head.themiple.ru:8443";
+      dns_config = {
+        base_domain = "lab.home";
+      };
     };
   };
   services.fail2ban.enable = true;
