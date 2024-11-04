@@ -14,14 +14,7 @@ MINIPC_REMOTE_CONFIG_PATH = /etc/nixos
 
 # Команды для VPS
 deploy-vps:
-	# Создаём временную директорию
-	ssh $(VPS_HOST) "mkdir -p $(TEMP_PATH)"
-	# Копируем файлы во временную директорию
-	scp -r $(VPS_CONFIG_PATH)/* $(VPS_HOST):$(TEMP_PATH)/
-	# Перемещаем файлы в целевую директорию с sudo
-	ssh $(VPS_HOST) "sudo cp -r $(TEMP_PATH)/* $(VPS_REMOTE_CONFIG_PATH)/ && rm -rf $(TEMP_PATH)"
-	# Применяем конфигурацию
-	ssh $(VPS_HOST) "sudo nixos-rebuild switch"
+	nixos-rebuild switch -I nixos-config=./hosts/vps-config/configuration.nix --target-host $(VPS_HOST) --use-remote-sudo
 
 check-vps:
 	ssh $(VPS_HOST) "nixos-version"
@@ -31,14 +24,7 @@ diff-vps:
 
 # Команды для MINIPC
 deploy-minipc:
-	# Создаём временную директорию
-	ssh $(MINIPC_HOST) "mkdir -p $(TEMP_PATH)"
-	# Копируем файлы во временную директорию
-	scp -r $(MINIPC_CONFIG_PATH)/* $(MINIPC_HOST):$(TEMP_PATH)/
-	# Перемещаем файлы в целевую директорию с sudo
-	ssh $(MINIPC_HOST) "sudo cp -r $(TEMP_PATH)/* $(MINIPC_REMOTE_CONFIG_PATH)/ && rm -rf $(TEMP_PATH)"
-	# Применяем конфигурацию
-	ssh $(MINIPC_HOST) "sudo nixos-rebuild switch"
+	nixos-rebuild switch -I nixos-config=./hosts/minipc/configuration.nix  --target-host $(MINIPC_HOST) --use-remote-sudo
 
 check-minipc:
 	ssh $(MINIPC_HOST) "nixos-version"
