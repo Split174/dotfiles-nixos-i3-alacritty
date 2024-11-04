@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./immich.nix
     ];
 
   # Bootloader.
@@ -59,6 +60,9 @@
     ];
   };
 
+  nix.settings.trusted-users = [ "root" "@wheel" ];
+  security.sudo.wheelNeedsPassword = false;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -82,8 +86,19 @@
   services.fail2ban.enable = true;
   services.tailscale.enable = true;
   
+  services.nginx = {
+    enable = true;
+    # other Nginx options
+    virtualHosts."minipc.minipc.lab.home" =  {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:2283";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
+  };
+
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedTCPPorts = [ 22 2283 80 443 ];
 
   system.stateVersion = "24.05";
 }
