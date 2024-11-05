@@ -87,6 +87,7 @@
   # Printing
   services.printing.enable = true;
 
+  services.tailscale.enable = true;
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
   users.users.serj = {
@@ -99,12 +100,28 @@
 
       telegram-desktop
       mattermost-desktop
+      keepassxc
+
+      go
+      gopls
+      gotools
       
       zsh
       git
       kubectl
       gnumake
-
+      kubernetes-helm
+      k3d
+      k9s
+      wget
+      curl
+      wireguard-tools
+      
+      appimage-run
+      
+      obsidian
+      discord
+      
       restic
 
       pwvucontrol
@@ -116,10 +133,12 @@
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
           redhat.vscode-yaml
+          golang.go
         ];
       })
       steam
       unzip
+      zip
       flameshot
       xfce.mousepad
     ];
