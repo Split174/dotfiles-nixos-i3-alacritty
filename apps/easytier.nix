@@ -10,7 +10,7 @@
   };
   virtualisation.oci-containers = {
     containers.easytier = {
-      image = "easytier/easytier:latest";
+      image = "easytier/easytier:v2.0.3";
       autoStart = true;
       extraOptions = [
         "--privileged"
