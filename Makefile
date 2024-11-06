@@ -10,7 +10,7 @@ MINIPC_HOST = minipc@192.168.1.200
 MINIPC_CONFIG_PATH = ./hosts/minipc
 MINIPC_REMOTE_CONFIG_PATH = /etc/nixos
 
-.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild
+.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild
 
 homepc-rebuild:
 	sudo nixos-rebuild switch -I nixos-config=./hosts/homepc/configuration.nix
