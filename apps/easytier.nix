@@ -21,7 +21,7 @@
       volumes = [
         "/etc/easytier:/root"
       ];
-      cmd = lib.splitString " " easytierArgs;  # Разбиваем строку аргументов на массив
+      cmd = lib.splitString " " easytierArgs;
     };
   };
 }
