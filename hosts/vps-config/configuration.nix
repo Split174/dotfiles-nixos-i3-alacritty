@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
-
+    (import ../../apps/easytier.nix { inherit config pkgs lib; } {
+      easytierArgs = "--no-tun --enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p tcp://public.easytier.top:11010";
+    })
   ];
 
   boot.tmp.cleanOnBoot = true;
@@ -48,23 +50,10 @@
     };
   };
 
-  # Headscale
-  services.headscale = {
-    enable = true;
-    address = "0.0.0.0";
-    port = 8443;
-    user = "vdsina01";
-    settings = {
-      server_url = "https://head.themiple.ru:8443";
-      dns_config = {
-        base_domain = "lab.home";
-      };
-    };
-  };
   services.fail2ban.enable = true;
-  services.tailscale.enable = true;
+
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 8443 ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
 
   system.stateVersion = "24.05";
 }

@@ -147,11 +147,6 @@ bindsym $super+s layout stacking
 bindsym $super+g layout tabbed
 bindsym $super+e layout toggle split
 
-# change container layout (stacked, tabbed, toggle split)
-bindsym $super+s layout stacking
-bindsym $super+g layout tabbed
-bindsym $super+e layout toggle split
-
 # toggle tiling / floating
 bindsym $super+space floating toggle
 

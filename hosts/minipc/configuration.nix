@@ -2,13 +2,16 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./immich.nix
+      (import ../../apps/easytier.nix {
+        args = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} --peers udp://89.110.119.1:12333";
+      })
     ];
 
   # Bootloader.
@@ -84,21 +87,9 @@
   };
   
   services.fail2ban.enable = true;
-  services.tailscale.enable = true;
-  
-  services.nginx = {
-    enable = true;
-    # other Nginx options
-    virtualHosts."minipc.minipc.lab.home" =  {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:2283";
-        proxyWebsockets = true; # needed if you need to use WebSocket
-      };
-    };
-  };
 
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 2283 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 2283 ];
 
   system.stateVersion = "24.05";
 }
