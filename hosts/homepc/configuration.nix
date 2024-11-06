@@ -8,11 +8,11 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      (import ../apps/easytier.nix { inherit config pkgs lib; } {
-        easytierArgs = "--no-tun --ipv4 10.144.144.2 --network-name ${(import ../secrets/secrets.nix).easytierName} --network-secret ${(import ../secrets/secrets.nix).easytierSecret} -p tcp://public.easytier.top:11010";
+      (import ../../apps/easytier.nix { inherit config pkgs lib; } {
+        easytierArgs = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
       })
     ];
-
+  
   # System Configuration
   system.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;

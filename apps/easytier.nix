@@ -1,24 +1,27 @@
-# easytier.nix
 { config, pkgs, lib, ... }:
 
-{easytierArgs}: 
+{easytierArgs}:
 
 {
-  systemd.services.easytier = {
-    description = "EasyTier Service";
-    after = [ "network.target" "syslog.target" ];
-    wants = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.easytier}/bin/easytier-core ${easytierArgs}";
-      Restart = "on-failure";
-    };
-    enable = true;
+  system.activationScripts.createEasyTierDir = {
+    text = ''
+      mkdir -p /etc/easytier
+    '';
   };
-
-  environment.systemPackages = with pkgs; [
-    easytier
-  ];
+  virtualisation.oci-containers = {
+    containers.easytier = {
+      image = "easytier/easytier:latest";
+      autoStart = true;
+      extraOptions = [
+        "--privileged"
+        "--network=host"
+        "--memory=0"
+        "--hostname=easytier"
+      ];
+      volumes = [
+        "/etc/easytier:/root"
+      ];
+      cmd = lib.splitString " " easytierArgs;  # Разбиваем строку аргументов на массив
+    };
+  };
 }

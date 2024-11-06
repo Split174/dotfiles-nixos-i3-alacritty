@@ -5,7 +5,7 @@
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
     (import ../../apps/easytier.nix { inherit config pkgs lib; } {
-      easytierArgs = "--no-tun --enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p tcp://public.easytier.top:11010";
+      easytierArgs = "--enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret}";
     })
   ];
 
@@ -54,6 +54,7 @@
 
   # Open SSH port in the firewall
   networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPorts = [ 11010 ];
 
   system.stateVersion = "24.05";
 }

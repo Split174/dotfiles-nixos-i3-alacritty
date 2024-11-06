@@ -12,8 +12,8 @@ MINIPC_REMOTE_CONFIG_PATH = /etc/nixos
 
 .PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild
 
-mypc-rebuild:
-	sudo nixos-rebuild switch -I nixos-config=./nixos/configuration.nix
+homepc-rebuild:
+	sudo nixos-rebuild switch -I nixos-config=./hosts/homepc/configuration.nix
 
 # Команды для VPS
 deploy-vps:
