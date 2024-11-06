@@ -86,10 +86,21 @@
     };
   };
   
+    services.nginx = {
+    enable = true;
+    # other Nginx options
+    virtualHosts."photo.10.144.144.3.sslip.io" =  {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:2283";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
+  };
+
   services.fail2ban.enable = true;
 
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 2283 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 ];
 
   system.stateVersion = "24.05";
 }
