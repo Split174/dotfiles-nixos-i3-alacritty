@@ -5,3 +5,7 @@
 ```nix
 nix.settings.trusted-users = [ "root" "serj" ];
 ```
+
+### TODO
+
+Перенести immich на podman
