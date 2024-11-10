@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   immichVersion = "v1.119.1";
   immichLibrary = "/etc/immich/library";
   pgData = "/etc/immich/postgresql";
@@ -71,8 +74,7 @@ let
           ]
         restart: always
   '';
-in
-{
+in {
   system.activationScripts.createImmichDir = {
     text = ''
       mkdir -p /etc/immich
@@ -80,10 +82,10 @@ in
   };
   systemd.services.immich-docker = {
     description = "Immich Docker Compose Service";
-    after = [ "docker.service" ];
-    requires = [ "docker.service" ];
-    wantedBy = [ "multi-user.target" ];
-
+    after = ["docker.service"];
+    requires = ["docker.service"];
+    wantedBy = ["multi-user.target"];
+    onFailure = ["telegram-notify@%n.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

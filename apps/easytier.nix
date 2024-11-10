@@ -25,4 +25,5 @@
       cmd = lib.splitString " " easytierArgs;
     };
   };
+  systemd.services.podman-easytier.onFailure = ["telegram-notify@%n.service"];
 }
