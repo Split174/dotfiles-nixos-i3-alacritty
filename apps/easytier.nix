@@ -1,8 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-{easytierArgs}:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {easytierArgs}: {
   system.activationScripts.createEasyTierDir = {
     text = ''
       mkdir -p /etc/easytier

@@ -1,14 +1,18 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
-    (import ../../apps/easytier.nix { inherit config pkgs lib; } {
+    (import ../../apps/easytier.nix {inherit config pkgs lib;} {
       easytierArgs = "--enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret}";
     })
   ];
 
+  #boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "v120888";
@@ -17,9 +21,9 @@
   users.users.vdsina01 = {
     isNormalUser = true;
     description = "vdsina01";
-    extraGroups = [ 
-      "wheel" 
-    #  "docker" 
+    extraGroups = [
+      "wheel"
+      #  "docker"
     ];
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC/QPeqvXNSqbmAJCYWQTkr3/8sRSOylsUPoGQDx4/W4bXZE30Q7T2GgUiRkW52V7Vy8MJwLsB5Pi6KpCgO4YcjSldThRxbyHy5bt9BGAI+QIxel2sZnFnb9hECZnXXvx+wA/X3Kj6YGI6ZjhCrk+TFwg3VkgiQQscpkIc0POs07d5EMLZtVrsnr5svmXlu7hHQ7YLk+BAsY+nLG0ydCvIGZs6dUFaib2LPmZJCwZ3TB2ryNpheRBdBK2OsqLC19dkFMtwQ0JqKqGpnUXWTeAr3VDD5x9m+FIAsBA8rX/YQF7bO8Ck8/fCS9v2FedhNbAMxNy57LHbnqWChuN98EX+63mw5oexckFr8D/4OAwPH60mUJtdG6tej+98LAYradv/FhvwNJKG83g3JRvtc07ZLq854PCFSZuIosb/wzcUHsmoqVNWDCEdOLTBj1MiagQj5dPPls0j5KSSvqTVihcM8Rffz0BC7hlKPm+O8793zuX7I5RivHWbOPR6M11y/YdU="
@@ -27,7 +31,7 @@
     ];
   };
 
-  nix.settings.trusted-users = [ "root" "@wheel" ];
+  nix.settings.trusted-users = ["root" "@wheel"];
   security.sudo.wheelNeedsPassword = false;
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -53,8 +57,8 @@
   services.fail2ban.enable = true;
 
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  networking.firewall.allowedUDPPorts = [ 11010 ];
+  networking.firewall.allowedTCPPorts = [22 11010];
+  networking.firewall.allowedUDPPorts = [11010];
 
   system.stateVersion = "24.05";
 }

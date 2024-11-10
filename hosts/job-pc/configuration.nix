@@ -1,29 +1,31 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
-
-{ config, pkgs, lib, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      (import ../../apps/easytier.nix { inherit config pkgs lib; } {
-        easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
-      })
-    ];
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    (import ../../apps/easytier.nix {inherit config pkgs lib;} {
+      easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
+    })
+  ];
 
   # System Configuration
   system.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;
-  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw 
+  environment.pathsToLink = ["/libexec"]; # links /libexec from derivations to /run/current-system/sw
 
   # Boot Configuration
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
-  
+
   # Docker
 
   virtualisation.docker.enable = true;
@@ -95,7 +97,7 @@
   users.users.serj = {
     isNormalUser = true;
     description = "serj";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = ["networkmanager" "wheel" "docker"];
     packages = with pkgs; [
       neofetch
       alacritty
@@ -121,13 +123,13 @@
       yamllint
 
       gparted
-      
+
       restic
 
       traceroute
-      
+
       pwvucontrol
-      
+
       arandr
 
       networkmanagerapplet
@@ -148,7 +150,7 @@
 
   # Environment Variables
   environment.variables = rec {
-    GIT_AUTHOR_NAME  = "Split174";
+    GIT_AUTHOR_NAME = "Split174";
     GIT_AUTHOR_EMAIL = "sergei.popov174@gmail.com";
     GIT_COMMITTER_NAME = "Split174";
     GIT_COMMITTER_EMAIL = "sergei.popov174@gmail.com";
@@ -158,10 +160,10 @@
 
   fonts.packages = with pkgs; [
     nerdfonts
-  ];  
+  ];
 
   # Shell Configuration
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -169,7 +171,7 @@
     syntaxHighlighting.enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" ];
+      plugins = ["git"];
       theme = "robbyrussell";
     };
   };
