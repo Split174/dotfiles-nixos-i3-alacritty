@@ -12,9 +12,10 @@
     ./hardware-configuration.nix
     ../../apps/notify-ssh-login.nix
     ../../apps/notify-systemd-telegram.nix
+    ../../apps/node-exporter.nix
     ./immich.nix
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
-      easytierArgs = "--enable-exit-node --ipv4 10.144.144.3 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
+      easytierArgs = "--enable-exit-node --ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     })
   ];
 
@@ -95,18 +96,40 @@
   services.nginx = {
     enable = true;
     # other Nginx options
-    virtualHosts."photo.10.144.144.3.sslip.io" = {
+    virtualHosts."photo.10.144.144.2.sslip.io" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:2283";
         proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
+    virtualHosts."grafana.10.144.144.2.sslip.io" = {
+      locations."/" = {
+        proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+        proxyWebsockets = true;
+        recommendedProxySettings = true;
       };
     };
   };
 
   services.fail2ban.enable = true;
 
+  services.victoriametrics.enable = true;
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "127.0.0.1";
+        http_port = 3000;
+        # Grafana needs to know on which domain and URL it's running
+        domain = "grafana.10.144.144.2.sslip.io";
+        serve_from_sub_path = true;
+      };
+    };
+  };
+  services.prometheus.exporters.node.enable = true;
+
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [22 80];
+  networking.firewall.allowedTCPPorts = [22 80 8428];
 
   system.stateVersion = "24.05";
 }

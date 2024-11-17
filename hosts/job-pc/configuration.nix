@@ -32,7 +32,7 @@
 
   # Networking
   networking = {
-    hostName = "nixos"; # Define your hostname.
+    hostName = "jobpc"; # Define your hostname.
     networkmanager.enable = true;
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";

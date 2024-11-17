@@ -9,6 +9,7 @@
     ./networking.nix # generated at runtime by nixos-infect
     ../../apps/notify-ssh-login.nix
     ../../apps/notify-systemd-telegram.nix
+    ../../apps/node-exporter.nix
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
       easytierArgs = "--enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret}";
     })

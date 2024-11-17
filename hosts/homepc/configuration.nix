@@ -10,8 +10,9 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ../../apps/node-exporter.nix
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
-      easytierArgs = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
+      easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     })
   ];
 
@@ -32,7 +33,7 @@
 
   # Networking
   networking = {
-    hostName = "nixos"; # Define your hostname.
+    hostName = "homepc"; # Define your hostname.
     networkmanager.enable = true;
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
