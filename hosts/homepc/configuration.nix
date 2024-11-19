@@ -115,7 +115,11 @@
       git
       kubectl
       gnumake
-      kubernetes-helm
+      (
+        pkgs.wrapHelm pkgs.kubernetes-helm {
+          plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
+        }
+      )
       k3d
       k9s
       wget
