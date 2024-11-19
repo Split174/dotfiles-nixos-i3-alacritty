@@ -15,7 +15,7 @@
     ../../apps/node-exporter.nix
     ./immich.nix
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
-      easytierArgs = "--enable-exit-node --ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
+      easytierArgs = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     })
   ];
 
