@@ -144,6 +144,7 @@
           redhat.vscode-yaml
           golang.go
           kamadorueda.alejandra
+          tim-koehler.helm-intellisense
         ];
       })
       steam
@@ -177,7 +178,7 @@
     syntaxHighlighting.enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = ["git"];
+      plugins = ["git" "docker" "docker-compose" "podman" "systemd" "helm" "kubectl"];
       theme = "robbyrussell";
     };
   };
