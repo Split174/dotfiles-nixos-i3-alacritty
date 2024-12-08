@@ -30,7 +30,9 @@
   # Docker
 
   virtualisation.docker.enable = true;
-
+  system.activationScripts."dockerLogin" = {
+    text = ''${pkgs.docker}/bin/docker login -u ${(import ../../secrets/secrets.nix).dockerUser} -p ${(import ../../secrets/secrets.nix).dockerPass}'';
+  };
   # Networking
   networking = {
     hostName = "homepc"; # Define your hostname.
@@ -125,6 +127,11 @@
       wget
       curl
       wireguard-tools
+      antares
+      xclip
+      jq
+
+      feh
 
       traceroute
 
@@ -134,7 +141,6 @@
       discord
 
       easytier
-
       restic
 
       pwvucontrol
@@ -149,6 +155,8 @@
           golang.go
           kamadorueda.alejandra
           tim-koehler.helm-intellisense
+          phind.phind
+          ms-python.python
         ];
       })
       steam
