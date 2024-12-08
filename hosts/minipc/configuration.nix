@@ -19,6 +19,10 @@
     })
   ];
 
+  system.activationScripts."dockerLogin" = {
+    text = ''${pkgs.docker}/bin/docker login -u ${(import ../../secrets/secrets.nix).dockerUser} -p ${(import ../../secrets/secrets.nix).dockerPass}'';
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -102,6 +106,12 @@
         proxyWebsockets = true; # needed if you need to use WebSocket
       };
     };
+    virtualHosts."me.10.144.144.2.sslip.io" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:28081";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
     virtualHosts."grafana.10.144.144.2.sslip.io" = {
       locations."/" = {
         proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
@@ -110,6 +120,40 @@
       };
     };
   };
+
+  virtualisation.oci-containers = {
+    containers.assistentbot = {
+      image = "themiple/assistentbot:0.0.1";
+      autoStart = true;
+      extraOptions = [
+        "--network=host"
+      ];
+      environment = {
+        BOT_TOKEN = ''${(import ../../secrets/secrets.nix).ASSISTENT_BOT_TOKEN}'';
+        OPENAI_API_KEY = ''${(import ../../secrets/secrets.nix).OPENAI_API_KEY}'';
+        MONGO_URI = ''${(import ../../secrets/secrets.nix).MONGO_URI}'';
+      };
+      #cmd = ["python3" "/app/main.py"];
+    };
+
+    containers.mongo-express = {
+      image = "mongo-express";
+      autoStart = true;
+      ports = [
+        "127.0.0.1:28081:8081"
+      ];
+      #extraOptions = [
+      #  "--network=ferretdb"
+      #];
+      environment = {
+        ME_CONFIG_BASICAUTH_USERNAME = ''${(import ../../secrets/secrets.nix).ME_CONFIG_BASICAUTH_USERNAME}'';
+        ME_CONFIG_BASICAUTH_PASSWORD = ''${(import ../../secrets/secrets.nix).ME_CONFIG_BASICAUTH_PASSWORD}'';
+        ME_CONFIG_MONGODB_URL = "mongodb://127.0.0.1:27017/";
+      };
+    };
+  };
+  systemd.services.podman-assistentbot.onFailure = ["telegram-notify@%n.service"];
+  services.ferretdb.enable = true;
 
   services.fail2ban.enable = true;
 
