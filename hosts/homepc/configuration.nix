@@ -118,6 +118,7 @@
       zip
       flameshot
       appimage-run
+      restic
 
       # Разработка
       alacritty
@@ -137,7 +138,7 @@
       # Коммуникации
       telegram-desktop
       mattermost-desktop
-      discord
+      #discord
 
       # Мультимедиа
       feh
@@ -156,6 +157,7 @@
 
       # Сеть
       #easytier
+      wireguard-tools
 
       # IDE и текстовые редакторы
       obsidian
@@ -194,7 +196,7 @@
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
-    oh-my-zsh = {
+    ohMyZsh = {
       enable = true;
       plugins = ["git" "docker" "docker-compose" "podman" "systemd" "helm" "kubectl"];
       theme = "robbyrussell";
@@ -221,6 +223,7 @@
     # wget
     # vscode
     # i3status
+    helix
   ];
 
   # Optional Configurations (commented out)

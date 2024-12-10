@@ -10,7 +10,7 @@ MINIPC_HOST = minipc@192.168.1.200
 MINIPC_CONFIG_PATH = ./hosts/minipc
 MINIPC_REMOTE_CONFIG_PATH = /etc/nixos
 
-.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild
+.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild add-channel-vps add-channel-minipc
 
 jobpc-rebuild:
 	sudo nixos-rebuild switch -I nixos-config=./hosts/job-pc/configuration.nix
@@ -27,6 +27,10 @@ check-vps:
 
 diff-vps:
 	ssh $(VPS_HOST) "sudo nixos-rebuild dry-build"
+
+add-channels:
+	ssh $(VPS_HOST) "sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos"
+	ssh $(MINIPC_HOST) "sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos"
 
 # Команды для MINIPC
 deploy-minipc:

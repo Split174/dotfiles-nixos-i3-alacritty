@@ -18,7 +18,6 @@ in {
   systemd.services.export-to-prometheus = {
     path = with pkgs; [victoriametrics];
     enable = true;
-    after = ["network-online.target"];
     wantedBy = ["multi-user.target"];
     script = "vmagent -promscrape.config=${configure_prom} -remoteWrite.url=http://10.144.144.2:8428/api/v1/write";
   };
