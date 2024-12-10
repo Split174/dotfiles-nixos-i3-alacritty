@@ -27,6 +27,12 @@
     efi.canTouchEfiVariables = true;
   };
 
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   # Docker
   virtualisation.docker.enable = true;
 
@@ -163,7 +169,7 @@
       obsidian
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
-          bbenoist.nix
+          jnoortheen.nix-ide
           redhat.vscode-yaml
           golang.go
           kamadorueda.alejandra
