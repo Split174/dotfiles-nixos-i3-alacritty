@@ -1,5 +1,5 @@
 # Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
+# your system. Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 {
   config,
@@ -28,11 +28,12 @@
   };
 
   # Docker
-
   virtualisation.docker.enable = true;
+
   system.activationScripts."dockerLogin" = {
     text = ''${pkgs.docker}/bin/docker login -u ${(import ../../secrets/secrets.nix).dockerUser} -p ${(import ../../secrets/secrets.nix).dockerPass}'';
   };
+
   # Networking
   networking = {
     hostName = "homepc"; # Define your hostname.
@@ -44,6 +45,7 @@
 
   # Time and Locale
   time.timeZone = "Asia/Yekaterinburg";
+
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -83,6 +85,7 @@
   # Sound
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -97,57 +100,65 @@
 
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
+
   users.users.serj = {
     isNormalUser = true;
     description = "serj";
     extraGroups = ["networkmanager" "wheel" "docker"];
+
     packages = with pkgs; [
+      # Утилиты
       neofetch
+      wget
+      curl
+      jq
+      xclip
+      traceroute
+      unzip
+      zip
+      flameshot
+      appimage-run
+
+      # Разработка
       alacritty
-
-      telegram-desktop
-      mattermost-desktop
-      keepassxc
-
+      git
+      zsh
       go
       gopls
       gotools
-
-      zsh
-      git
       kubectl
       gnumake
-      (
-        pkgs.wrapHelm pkgs.kubernetes-helm {
-          plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
-        }
-      )
+      (pkgs.wrapHelm pkgs.kubernetes-helm {
+        plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
+      })
       k3d
       k9s
-      wget
-      curl
-      wireguard-tools
-      antares
-      xclip
-      jq
 
-      feh
-
-      traceroute
-
-      appimage-run
-
-      obsidian
+      # Коммуникации
+      telegram-desktop
+      mattermost-desktop
       discord
 
-      easytier
-      restic
-
+      # Мультимедиа
+      feh
       pwvucontrol
 
+      # Игры
+      steam
+
+      # Офисные программы
+      keepassxc
+
+      # Файловые менеджеры и другие
       networkmanagerapplet
       networkmanager-openconnect
       xfce.thunar
+
+      # Сеть
+      #easytier
+
+      # IDE и текстовые редакторы
+      obsidian
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
@@ -159,11 +170,6 @@
           ms-python.python
         ];
       })
-      steam
-      unzip
-      zip
-      flameshot
-      xfce.mousepad
     ];
   };
 
@@ -176,13 +182,13 @@
   };
 
   # Fonts
-
   fonts.packages = with pkgs; [
     nerdfonts
   ];
 
   # Shell Configuration
   environment.shells = with pkgs; [zsh];
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -199,6 +205,7 @@
   programs = {
     firefox.enable = true;
     steam.enable = true;
+
     thunar = {
       enable = true;
       plugins = with pkgs.xfce; [
