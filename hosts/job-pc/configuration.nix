@@ -126,6 +126,12 @@
 
       restic
 
+      xclip
+
+      pinentry-curses
+      sops
+      gnupg
+
       traceroute
 
       pwvucontrol
@@ -139,6 +145,8 @@
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
           redhat.vscode-yaml
+          tim-koehler.helm-intellisense
+          golang.go
         ];
       })
 
@@ -178,6 +186,7 @@
 
   # Program Configurations
   programs = {
+    gnupg.agent.enable = true;
     firefox.enable = true;
     steam.enable = true;
     thunar = {
