@@ -17,6 +17,9 @@
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
       easytierArgs = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     })
+    (import ../../apps/kill-wolf-bot.nix {inherit config pkgs lib;} {
+      token = "${(import ../../secrets/secrets.nix).killwolfbotToken}";
+    })
   ];
 
   system.activationScripts."dockerLogin" = {
@@ -99,7 +102,13 @@
 
   services.nginx = {
     enable = true;
+    clientMaxBodySize = "300m";
     # other Nginx options
+    virtualHosts."cr.10.144.144.2.sslip.io" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:5000";
+      };
+    };
     virtualHosts."photo.10.144.144.2.sslip.io" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:2283";
@@ -156,6 +165,11 @@
   services.ferretdb.enable = true;
 
   services.fail2ban.enable = true;
+
+  services.dockerRegistry = {
+    enable = true;
+    port = 5000;
+  };
 
   services.victoriametrics.enable = true;
   services.grafana = {
