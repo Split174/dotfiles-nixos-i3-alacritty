@@ -34,7 +34,12 @@
   };
 
   # Docker
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    extraOptions = ''
+      --insecure-registry cr.10.144.144.2.sslip.io:80
+    '';
+  };
 
   system.activationScripts."dockerLogin" = {
     text = ''${pkgs.docker}/bin/docker login -u ${(import ../../secrets/secrets.nix).dockerUser} -p ${(import ../../secrets/secrets.nix).dockerPass}'';
