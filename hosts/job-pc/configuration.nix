@@ -121,7 +121,11 @@
       gnumake
       k9s
       yamllint
-
+      
+      go
+      gopls
+      gotools
+      
       gparted
 
       restic
