@@ -14,6 +14,13 @@
       easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
     })
   ];
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
+        inherit pkgs;
+      };
+    };
+  };
 
   # System Configuration
   system.stateVersion = "24.05";
@@ -107,6 +114,10 @@
       zoom-us
       obsidian
       keepassxc
+      
+      mynur.dnsr
+
+      feh
 
       postgresql_16
       #dbeaver-bin
@@ -121,6 +132,10 @@
       gnumake
       k9s
       yamllint
+      yq
+      kustomize_4
+      
+      nix-init
       
       go
       gopls
@@ -151,6 +166,7 @@
           redhat.vscode-yaml
           tim-koehler.helm-intellisense
           golang.go
+          yzhang.markdown-all-in-one
         ];
       })
 
