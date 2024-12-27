@@ -16,6 +16,14 @@
     })
   ];
 
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
+        inherit pkgs;
+      };
+    };
+  };
+
   # System Configuration
   system.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;
@@ -27,10 +35,15 @@
     efi.canTouchEfiVariables = true;
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+      tarball-ttl = 0;
+    };
   };
 
   # Docker
@@ -130,6 +143,7 @@
       flameshot
       appimage-run
       restic
+      nix-init
 
       # Разработка
       alacritty
@@ -169,6 +183,8 @@
       # Сеть
       #easytier
       wireguard-tools
+      mynur.dnsr
+      mynur.kgb
 
       # IDE и текстовые редакторы
       obsidian
