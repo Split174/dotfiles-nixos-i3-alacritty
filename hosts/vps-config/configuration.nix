@@ -10,10 +10,19 @@
     ../../apps/notify-ssh-login.nix
     ../../apps/notify-systemd-telegram.nix
     ../../apps/node-exporter.nix
+    (import ../../apps/kgb.nix {inherit config pkgs lib;})
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
       easytierArgs = "--enable-exit-node --ipv4 10.144.144.1 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret}";
     })
   ];
+
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
+        inherit pkgs;
+      };
+    };
+  };
 
   #boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
   boot.tmp.cleanOnBoot = true;
