@@ -117,7 +117,9 @@
       
       mynur.dnsr
 
+      #медия
       feh
+      vlc
 
       postgresql_16
       #dbeaver-bin
