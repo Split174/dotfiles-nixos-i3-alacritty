@@ -134,7 +134,9 @@
       bat
       git
       kubectl
-      kubernetes-helm
+      (pkgs.wrapHelm pkgs.kubernetes-helm {
+        plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
+      })
       k3d
       gnumake
       k9s
