@@ -10,9 +10,9 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    (import ../../apps/easytier.nix {inherit config pkgs lib;} {
-      easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
-    })
+    #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
+    #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
+    #})
   ];
   nixpkgs.config = {
     packageOverrides = pkgs: {
@@ -44,6 +44,9 @@
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+    extraHosts = ''
+    ${(import ../../secrets/secrets.nix).extraHostsJob}
+    '';
   };
 
   # Time and Locale
@@ -108,6 +111,7 @@
     packages = with pkgs; [
       neofetch
       alacritty
+      mc
 
       telegram-desktop
       mattermost-desktop
@@ -120,6 +124,7 @@
       #медия
       feh
       vlc
+      p7zip
 
       postgresql_16
       #dbeaver-bin
@@ -136,7 +141,8 @@
       yamllint
       yq
       kustomize_4
-      
+      opentofu
+
       nix-init
       
       go
@@ -169,6 +175,7 @@
           tim-koehler.helm-intellisense
           golang.go
           yzhang.markdown-all-in-one
+          hashicorp.terraform
         ];
       })
 
