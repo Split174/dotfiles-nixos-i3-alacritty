@@ -17,9 +17,6 @@
     (import ../../apps/easytier.nix {inherit config pkgs lib;} {
       easytierArgs = "--ipv4 10.144.144.2 --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     })
-    (import ../../apps/kill-wolf-bot.nix {inherit config pkgs lib;} {
-      token = "${(import ../../secrets/secrets.nix).killwolfbotToken}";
-    })
   ];
 
   system.activationScripts."dockerLogin" = {

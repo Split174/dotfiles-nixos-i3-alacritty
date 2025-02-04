@@ -43,7 +43,21 @@
     ];
   };
 
-  nix.settings.trusted-users = ["root" "@wheel"];
+  nix = {
+    optimise = {
+      automatic = true;
+      dates = ["03:45"];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+      trusted-users = ["root" "@wheel"];
+    };
+  };
+
   security.sudo.wheelNeedsPassword = false;
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
