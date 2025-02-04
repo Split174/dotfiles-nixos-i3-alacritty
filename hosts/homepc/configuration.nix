@@ -11,9 +11,9 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../apps/node-exporter.nix
-    (import ../../apps/easytier.nix {inherit config pkgs lib;} {
-      easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
-    })
+    #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
+    #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
+    #})
   ];
 
   nixpkgs.config = {
@@ -28,6 +28,35 @@
   system.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;
   environment.pathsToLink = ["/libexec"]; # links /libexec from derivations to /run/current-system/sw
+
+  services.restic = {
+    backups.test = {
+      initialize = true;
+      repository = "rclone:yandex:tests";
+      paths = ["/home/serj/yadi"];
+      passwordFile = "/etc/restic/restic_password.txt";
+      rcloneConfigFile = "/etc/restic/rclone.conf";
+      pruneOpts = [
+        "--keep-weekly 4"
+        "--keep-monthly 3"
+      ];
+    };
+  };
+  environment.etc."/restic/restic_password.txt" = {
+    text = ''
+      ${(import ../../secrets/secrets.nix).resticPass}
+    '';
+  };
+  environment.etc."/restic/rclone.conf" = {
+    text = ''
+      [yandex]
+      type = webdav
+      url = https://webdav.yandex.ru
+      vendor = other
+      user = ${(import ../../secrets/secrets.nix).yandexDiskUser}
+      pass = ${(import ../../secrets/secrets.nix).yandexDiskPass}
+    '';
+  };
 
   # Boot Configuration
   boot.loader = {
@@ -144,6 +173,17 @@
       appimage-run
       restic
       nix-init
+      p7zip
+      yandex-cloud
+      opentofu
+      terraform
+
+      discord
+
+      # Секерты
+      sops
+      gnupg
+      pinentry-all
 
       # Разработка
       alacritty
@@ -231,6 +271,10 @@
   };
 
   # Program Configurations
+  programs.gnupg.agent = {
+    enable = true;
+  };
+
   programs = {
     firefox.enable = true;
     steam.enable = true;
