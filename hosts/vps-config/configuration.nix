@@ -70,6 +70,17 @@
     neofetch
   ];
 
+  services.nginx = {
+    enable = true;
+    clientMaxBodySize = "1024m";
+    virtualHosts."photo.themiple.ru" = {
+      locations."/" = {
+        proxyPass = "http://10.144.144.2:2283";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
+  };
+
   # Enable OpenSSH server with secure configuration
   services.openssh = {
     enable = true;

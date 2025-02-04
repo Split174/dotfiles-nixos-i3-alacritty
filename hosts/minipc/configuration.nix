@@ -184,7 +184,12 @@
   services.prometheus.exporters.node.enable = true;
 
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [22 80 8428];
+  networking.firewall.allowedTCPPorts = [
+    22
+    80
+    8428 # prom
+    2283 # immich
+  ];
 
   system.stateVersion = "24.05";
 }
