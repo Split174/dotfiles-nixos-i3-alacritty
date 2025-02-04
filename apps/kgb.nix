@@ -16,7 +16,7 @@
     ];
 
     serviceConfig = {
-      ExecStart = "${pkgs.mynur.kgb}/bin/kgb --allow ru,nl";
+      ExecStart = "${pkgs.mynur.kgb}/bin/kgb --allow ru,nl --timer 240";
 
       User = "root";
 

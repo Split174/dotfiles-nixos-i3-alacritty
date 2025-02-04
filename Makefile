@@ -2,13 +2,9 @@ TEMP_PATH = /tmp/nixos-config
 
 # Переменные для VPS
 VPS_HOST = vdsina01@89.110.119.238
-VPS_CONFIG_PATH = ./hosts/vps-config
-VPS_REMOTE_CONFIG_PATH = /etc/nixos
 
 # Переменные для MINIPC
 MINIPC_HOST = minipc@192.168.1.200
-MINIPC_CONFIG_PATH = ./hosts/minipc
-MINIPC_REMOTE_CONFIG_PATH = /etc/nixos
 
 .PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild add-channel-vps add-channel-minipc
 
