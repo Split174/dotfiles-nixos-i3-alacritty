@@ -118,12 +118,21 @@
       zoom-us
       obsidian
       keepassxc
-      
+      argocd
+      argocd-autopilot
+      argocd-vault-plugin
+      jq
+      age
+      detect-secrets
+      pre-commit
+
+      fzf
       mynur.dnsr
 
       #медия
       feh
       vlc
+      onlyoffice-desktopeditors
       p7zip
 
       postgresql_16
@@ -144,7 +153,7 @@
       yq
       kustomize_4
       opentofu
-
+      ansible
       nix-init
       
       go
@@ -210,7 +219,7 @@
     syntaxHighlighting.enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = ["git"];
+      plugins = ["git" "fzf"];
       theme = "robbyrussell";
     };
   };
