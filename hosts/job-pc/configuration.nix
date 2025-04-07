@@ -19,6 +19,9 @@
       mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
         inherit pkgs;
       };
+      #unstable = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/tarball/master") {
+      #  inherit pkgs;
+      #};
     };
   };
 
@@ -102,6 +105,11 @@
   # Printing
   services.printing.enable = true;
 
+  # resolvectl
+  services.resolved.enable = true;
+
+  services.tailscale.enable = true;
+
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
   users.users.serj = {
@@ -112,6 +120,7 @@
       neofetch
       alacritty
       mc
+      lm_sensors
 
       telegram-desktop
       mattermost-desktop
@@ -150,16 +159,19 @@
       gnumake
       k9s
       yamllint
+      yamlfmt
       yq
+      yandex-cloud
       kustomize_4
+
       opentofu
       ansible
       nix-init
-      
+
       go
       gopls
       gotools
-      
+
       gparted
 
       restic
@@ -171,7 +183,9 @@
       gnupg
 
       traceroute
-
+      headscale
+      doggo
+      wireguard-tools
       pwvucontrol
 
       arandr
@@ -217,6 +231,9 @@
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+    shellAliases = {
+      mfzf = ''mv "$(fzf --height=40% --reverse --preview 'cat {}')" "$(find / -type d 2>/dev/null | fzf --height=40% --reverse)"'';
+    };
     oh-my-zsh = {
       enable = true;
       plugins = ["git" "fzf"];
