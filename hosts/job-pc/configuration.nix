@@ -47,9 +47,9 @@
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-    extraHosts = ''
-    ${(import ../../secrets/secrets.nix).extraHostsJob}
-    '';
+    #extraHosts = ''
+    #${(import ../../secrets/secrets.nix).extraHostsJob}
+    #'';
   };
 
   # Time and Locale
@@ -127,6 +127,7 @@
       zoom-us
       obsidian
       keepassxc
+      (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
       argocd
       argocd-autopilot
       argocd-vault-plugin
@@ -143,6 +144,7 @@
       vlc
       onlyoffice-desktopeditors
       p7zip
+      sniffnet
 
       postgresql_16
       #dbeaver-bin
@@ -189,6 +191,7 @@
       pwvucontrol
 
       arandr
+      obs-studio
 
       networkmanagerapplet
       networkmanager-openconnect
