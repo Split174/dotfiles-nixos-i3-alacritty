@@ -30,6 +30,17 @@
   nixpkgs.config.allowUnfree = true;
   environment.pathsToLink = ["/libexec"]; # links /libexec from derivations to /run/current-system/sw
 
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 60d";
+    };
+    #settings = {
+    #  tarball-ttl = 0;
+    #};
+  };
+
   # Boot Configuration
   boot.loader = {
     systemd-boot.enable = true;
@@ -50,6 +61,9 @@
     #extraHosts = ''
     #${(import ../../secrets/secrets.nix).extraHostsJob}
     #'';
+    extraHosts = ''
+    127.0.0.1 dex
+    '';
   };
 
   # Time and Locale
@@ -117,85 +131,82 @@
     description = "serj";
     extraGroups = ["networkmanager" "wheel" "docker"];
     packages = with pkgs; [
+      # --- Системные утилиты и мониторинг
       neofetch
-      alacritty
-      mc
       lm_sensors
+      p7zip
+      zip
+      unzip
+      bat
+      traceroute
+      gparted
+      xclip
+      pinentry-curses
+      gnupg
+      arandr
+      pwvucontrol
+      libnotify
 
+      # --- Терминал и оболочка
+      alacritty
+      zsh
+      fzf
+
+      # --- Файловые менеджеры и редакторы
+      mc
+      xfce.thunar
+      xfce.mousepad
+
+      # --- Просмотр изображений и мультимедиа
+      feh
+      vlc
+      onlyoffice-desktopeditors
+
+      # --- Безопасность и хранение секретов
+      keepassxc
+      (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
+      age
+      sops
+      vault-medusa
+
+      # --- Обмен сообщениями и коммуникации
       telegram-desktop
       mattermost-desktop
       zoom-us
-      obsidian
-      keepassxc
-      (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
+
+      # --- Графика, скриншоты и запись экрана
+      flameshot
+
+      # --- DevOps, CI/CD, облако, инфраструктура
       argocd
       argocd-autopilot
       argocd-vault-plugin
       jq
-      age
-      detect-secrets
       pre-commit
-
-      fzf
-      mynur.dnsr
-
-      #медия
-      feh
-      vlc
-      onlyoffice-desktopeditors
-      p7zip
-      sniffnet
-
-      postgresql_16
-      #dbeaver-bin
-      #pgweb
-      zip
-      zsh
-      bat
-      git
+      yq
+      yamllint
+      yamlfmt
+      yandex-cloud
+      kustomize_4
       kubectl
       (pkgs.wrapHelm pkgs.kubernetes-helm {
         plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
       })
       k3d
-      gnumake
       k9s
-      yamllint
-      yamlfmt
-      yq
-      yandex-cloud
-      kustomize_4
-
       opentofu
+      restic
       ansible
       nix-init
 
+      # --- Разработка и программирование
+      git
+      gnumake
       go
       gopls
       gotools
-
-      gparted
-
-      restic
-
-      xclip
-
-      pinentry-curses
-      sops
-      gnupg
-
-      traceroute
-      headscale
-      doggo
-      wireguard-tools
-      pwvucontrol
-
-      arandr
-      obs-studio
-
-      networkmanagerapplet
-      networkmanager-openconnect
-      xfce.thunar
+      code-cursor
+      obsidian
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
@@ -207,9 +218,18 @@
         ];
       })
 
-      unzip
-      flameshot
-      xfce.mousepad
+      # --- Базы данных и инструменты для них
+      postgresql_16
+      dbeaver-bin
+      #pgweb
+
+      # --- Сетевые утилиты и VPN
+      doggo
+      wireguard-tools
+      networkmanagerapplet
+      networkmanager-openconnect
+      sniffnet
+      mynur.dnsr
     ];
   };
 
