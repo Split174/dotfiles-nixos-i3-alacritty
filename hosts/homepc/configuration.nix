@@ -11,6 +11,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../apps/node-exporter.nix
+    ./../modules/shells.nix
     #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
     #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     #})
@@ -254,21 +255,6 @@
   fonts.packages = with pkgs; [
     nerdfonts
   ];
-
-  # Shell Configuration
-  environment.shells = with pkgs; [zsh];
-
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh = {
-      enable = true;
-      plugins = ["git" "docker" "docker-compose" "podman" "systemd" "helm" "kubectl"];
-      theme = "robbyrussell";
-    };
-  };
 
   # Program Configurations
   programs.gnupg.agent = {

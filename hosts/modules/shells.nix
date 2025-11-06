@@ -1,7 +1,9 @@
-{ config, pkgs, ... }:
-
 {
-  environment.shells = [ pkgs.zsh ];
+  config,
+  pkgs,
+  ...
+}: {
+  environment.shells = [pkgs.zsh];
 
   environment.systemPackages = with pkgs; [
     fzf
@@ -60,7 +62,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "fzf" ];
+      plugins = ["git" "fzf" "docker" "docker-compose" "podman" "systemd" "helm" "kubectl"];
       theme = "robbyrussell";
     };
   };
