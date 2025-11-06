@@ -10,6 +10,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./../modules/shells.nix 
     #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
     #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
     #})
@@ -19,7 +20,7 @@
       mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
         inherit pkgs;
       };
-      #unstable = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/tarball/master") {
+      #unstable = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/tarball/nixos-unstable") {
       #  inherit pkgs;
       #};
     };
@@ -55,15 +56,12 @@
   networking = {
     hostName = "jobpc"; # Define your hostname.
     networkmanager.enable = true;
-    # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-    # proxy.default = "http://user:password@proxy:port/";
-    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
     #extraHosts = ''
     #${(import ../../secrets/secrets.nix).extraHostsJob}
     #'';
-    extraHosts = ''
-    127.0.0.1 dex
-    '';
+    #extraHosts = ''
+    #127.0.0.1 dex
+    #'';
   };
 
   # Time and Locale
@@ -105,6 +103,7 @@
   };
 
   # Sound
+  programs.noisetorch.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -123,7 +122,7 @@
   services.resolved.enable = true;
 
   services.tailscale.enable = true;
-
+  services.netbird.enable = true;
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
   users.users.serj = {
@@ -132,6 +131,7 @@
     extraGroups = ["networkmanager" "wheel" "docker"];
     packages = with pkgs; [
       # --- Системные утилиты и мониторинг
+      sshfs
       neofetch
       lm_sensors
       p7zip
@@ -161,8 +161,11 @@
       feh
       vlc
       onlyoffice-desktopeditors
+      # mplayer
+      simplescreenrecorder
 
       # --- Безопасность и хранение секретов
+      envsubst
       keepassxc
       (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
       age
@@ -179,6 +182,7 @@
 
       # --- DevOps, CI/CD, облако, инфраструктура
       argocd
+      rsync
       argocd-autopilot
       argocd-vault-plugin
       jq
@@ -192,20 +196,28 @@
       (pkgs.wrapHelm pkgs.kubernetes-helm {
         plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
       })
+      helm-dashboard
       k3d
       k9s
+      kompose
+      #mynur.unregistry
       opentofu
+      terraform
       restic
       ansible
       nix-init
+      devbox
+      kubebuilder
 
       # --- Разработка и программирование
+      #unstable.zed-editor
+      ollama
+      gotty
       git
       gnumake
       go
       gopls
       gotools
-      code-cursor
       obsidian
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
@@ -224,8 +236,11 @@
       #pgweb
 
       # --- Сетевые утилиты и VPN
+      wireshark
+      winbox4
       doggo
       wireguard-tools
+      netbird
       networkmanagerapplet
       networkmanager-openconnect
       sniffnet
@@ -242,27 +257,9 @@
   };
 
   # Fonts
-
   fonts.packages = with pkgs; [
     nerdfonts
   ];
-
-  # Shell Configuration
-  environment.shells = with pkgs; [zsh];
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    shellAliases = {
-      mfzf = ''mv "$(fzf --height=40% --reverse --preview 'cat {}')" "$(find / -type d 2>/dev/null | fzf --height=40% --reverse)"'';
-    };
-    oh-my-zsh = {
-      enable = true;
-      plugins = ["git" "fzf"];
-      theme = "robbyrussell";
-    };
-  };
 
   # Program Configurations
   programs = {
@@ -280,21 +277,5 @@
 
   # System Packages
   environment.systemPackages = with pkgs; [
-    # vim
-    # wget
-    # vscode
-    # i3status
   ];
-
-  # Optional Configurations (commented out)
-  # services.xserver.libinput.enable = true;
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-  # services.openssh.enable = true;
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # networking.firewall.enable = false;
 }
