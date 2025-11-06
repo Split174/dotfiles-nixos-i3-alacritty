@@ -15,8 +15,8 @@ sudo podman exec easytier /bin/sh -c - 'easytier-cli peer'
 ### Список снапшотов:
 
 ```
-export export RCLONE_CONFIG='/etc/restic/rclone.conf' && export RESTIC_PASSWORD=PASS && restic -r rclone:yandex:tests snapshots
-export export RCLONE_CONFIG='/etc/restic/rclone.conf' && export RESTIC_PASSWORD=PASS && restic -r rclone:yandex:tests restore latest --target ./test
+export export RCLONE_CONFIG='/etc/restic/rclone.conf' && export RESTIC_PASSWORD=PASS && restic -r rclone:yandex:immich snapshots
+export export RCLONE_CONFIG='/etc/restic/rclone.conf' && export RESTIC_PASSWORD=PASS && restic -r rclone:yandex:immich restore latest --target ./test
 ```
 ### TODO
 

@@ -112,6 +112,12 @@
         proxyWebsockets = true; # needed if you need to use WebSocket
       };
     };
+    virtualHosts."photo.192.168.1.200.sslip.io" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:2283";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+      };
+    };
     virtualHosts."me.10.144.144.2.sslip.io" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:28081";

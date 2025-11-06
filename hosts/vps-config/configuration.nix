@@ -94,7 +94,7 @@
   services.fail2ban.enable = true;
 
   # Open SSH port in the firewall
-  networking.firewall.allowedTCPPorts = [22 11010];
+  networking.firewall.allowedTCPPorts = [22 80 11010];
   networking.firewall.allowedUDPPorts = [11010];
 
   system.stateVersion = "24.05";

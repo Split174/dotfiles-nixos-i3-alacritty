@@ -95,4 +95,35 @@ in {
     };
   };
   virtualisation.docker.enable = true;
+
+  # backup
+
+  services.restic = {
+    backups.immich = {
+      initialize = true;
+      repository = "rclone:yandex:immich";
+      paths = ["${immichLibrary}" "${pgData}"];
+      passwordFile = "/etc/restic/restic_password.txt";
+      rcloneConfigFile = "/etc/restic/rclone.conf";
+      pruneOpts = [
+        "--keep-weekly 4"
+        "--keep-monthly 3"
+      ];
+    };
+  };
+  environment.etc."/restic/restic_password.txt" = {
+    text = ''
+      ${(import ../../secrets/secrets.nix).resticPass}
+    '';
+  };
+  environment.etc."/restic/rclone.conf" = {
+    text = ''
+      [yandex]
+      type = webdav
+      url = https://webdav.yandex.ru
+      vendor = other
+      user = ${(import ../../secrets/secrets.nix).yandexDiskUser}
+      pass = ${(import ../../secrets/secrets.nix).yandexDiskPass}
+    '';
+  };
 }

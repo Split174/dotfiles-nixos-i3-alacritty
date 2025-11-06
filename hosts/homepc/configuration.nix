@@ -29,34 +29,7 @@
   nixpkgs.config.allowUnfree = true;
   environment.pathsToLink = ["/libexec"]; # links /libexec from derivations to /run/current-system/sw
 
-  services.restic = {
-    backups.test = {
-      initialize = true;
-      repository = "rclone:yandex:tests";
-      paths = ["/home/serj/yadi"];
-      passwordFile = "/etc/restic/restic_password.txt";
-      rcloneConfigFile = "/etc/restic/rclone.conf";
-      pruneOpts = [
-        "--keep-weekly 4"
-        "--keep-monthly 3"
-      ];
-    };
-  };
-  environment.etc."/restic/restic_password.txt" = {
-    text = ''
-      ${(import ../../secrets/secrets.nix).resticPass}
-    '';
-  };
-  environment.etc."/restic/rclone.conf" = {
-    text = ''
-      [yandex]
-      type = webdav
-      url = https://webdav.yandex.ru
-      vendor = other
-      user = ${(import ../../secrets/secrets.nix).yandexDiskUser}
-      pass = ${(import ../../secrets/secrets.nix).yandexDiskPass}
-    '';
-  };
+  services.resolved.enable = true;
 
   # Boot Configuration
   boot.loader = {
@@ -91,7 +64,7 @@
   networking = {
     hostName = "homepc"; # Define your hostname.
     networkmanager.enable = true;
-    extraHosts = "${(import ../../secrets/secrets.nix).extraHostsJob}";
+    #extraHosts = "${(import ../../secrets/secrets.nix).extraHostsJob}";
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -150,7 +123,11 @@
   };
 
   # Printing
+
+  services.netbird.enable = true;
   services.printing.enable = true;
+
+  services.tailscale.enable = true;
 
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
@@ -166,6 +143,7 @@
       wget
       curl
       jq
+      yq
       xclip
       traceroute
       unzip
@@ -178,28 +156,44 @@
       yandex-cloud
       opentofu
       terraform
-
+      pre-commit
+      fzf
       discord
+      sniffnet
 
       # Секерты
       sops
       gnupg
       pinentry-all
+      age
+      detect-secrets
+      pass
 
       # Разработка
+      wayback_machine_downloader
+      code-cursor
+      yamlfmt
       alacritty
       git
+      postgresql_17
+      dbeaver-bin
       zsh
+      sad
       go
       gopls
       gotools
       kubectl
+      argocd-vault-plugin
+      kustomize_4
+      sqlite
       gnumake
       (pkgs.wrapHelm pkgs.kubernetes-helm {
         plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
       })
       k3d
       k9s
+      argocd-autopilot
+      kubebuilder
 
       # Коммуникации
       telegram-desktop
@@ -209,6 +203,9 @@
       # Мультимедиа
       feh
       pwvucontrol
+      vlc
+      onlyoffice-desktopeditors
+      simplescreenrecorder
 
       # Игры
       steam
@@ -237,6 +234,8 @@
           kamadorueda.alejandra
           tim-koehler.helm-intellisense
           phind.phind
+          continue.continue
+          hashicorp.terraform
           ms-python.python
         ];
       })
