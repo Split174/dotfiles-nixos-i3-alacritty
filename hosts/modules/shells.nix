@@ -8,13 +8,18 @@
   environment.systemPackages = with pkgs; [
     fzf
     bat
+    zoxide
   ];
+
 
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+    shellInit = ''
+      eval "$(${pkgs.zoxide}/bin/zoxide init zsh) --cmd cd"
+    '';
 
     shellAliases = {
       mfzf = ''mv "$(fzf --height=40% --reverse --preview 'cat {}')" "$(find / -type d 2>/dev/null | fzf --height=40% --reverse)"'';
@@ -60,7 +65,7 @@
       ''}/bin/catfzf-script";
     };
 
-    oh-my-zsh = {
+    ohMyZsh = {
       enable = true;
       plugins = ["git" "fzf" "docker" "docker-compose" "podman" "systemd" "helm" "kubectl"];
       theme = "robbyrussell";
