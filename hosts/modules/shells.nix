@@ -11,7 +11,6 @@
     zoxide
   ];
 
-
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -44,8 +43,7 @@
             exit 1
         fi
 
-        # fzf запускается с полным путем к bat для надежности
-        selected_files=$(find "$TARGET_DIR" -type f | $FZF_BIN --multi --preview "$BAT_BIN --color=always {} || cat {}")
+        selected_files=$(find "$TARGET_DIR" \( -name .git -type d \) -prune -o -type f -print | $FZF_BIN --multi --preview "$BAT_BIN --color=always {} || cat {}")
 
         if [ -z "$selected_files" ]; then
             echo "Выбор отменен."
