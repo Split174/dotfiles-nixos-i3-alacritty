@@ -193,6 +193,7 @@
       yandex-cloud
       kustomize_4
       kubectl
+      kubeconform
       (pkgs.wrapHelm pkgs.kubernetes-helm {
         plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
       })
@@ -240,6 +241,7 @@
       winbox4
       doggo
       wireguard-tools
+      wg-netmanager
       netbird
       networkmanagerapplet
       networkmanager-openconnect
