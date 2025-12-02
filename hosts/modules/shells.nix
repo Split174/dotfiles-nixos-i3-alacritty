@@ -21,6 +21,8 @@
     '';
 
     shellAliases = {
+      zcode ="${pkgs.vscode}/bin/code $(${pkgs.zoxide}/bin/zoxide query -i)";
+
       mfzf = ''mv "$(fzf --height=40% --reverse --preview 'cat {}')" "$(find / -type d 2>/dev/null | fzf --height=40% --reverse)"'';
 
       catfzf = "${pkgs.writeShellScriptBin "catfzf-script" ''
