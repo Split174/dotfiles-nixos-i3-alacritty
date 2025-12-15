@@ -48,6 +48,8 @@
     efi.canTouchEfiVariables = true;
   };
 
+  # ssh-agent
+  programs.ssh.startAgent = true;
   # Docker
 
   virtualisation.docker.enable = true;
@@ -56,9 +58,9 @@
   networking = {
     hostName = "jobpc"; # Define your hostname.
     networkmanager.enable = true;
-    #extraHosts = ''
-    #${(import ../../secrets/secrets.nix).extraHostsJob}
-    #'';
+    extraHosts = ''
+    ${(import ../../secrets/secrets.nix).extraHostsJob}
+    '';
     #extraHosts = ''
     #127.0.0.1 dex
     #'';
@@ -167,10 +169,12 @@
       # --- Безопасность и хранение секретов
       envsubst
       keepassxc
+      #keepass-keeagent
       (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
       age
       sops
       vault-medusa
+      syncthing
 
       # --- Обмен сообщениями и коммуникации
       telegram-desktop
