@@ -10,7 +10,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./../modules/shells.nix 
+    ./../modules/shells.nix
+    ./../modules/jobpc-syncthing.nix
     #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
     #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010 --exit-nodes 10.144.144.1";
     #})
@@ -174,7 +175,6 @@
       age
       sops
       vault-medusa
-      syncthing
 
       # --- Обмен сообщениями и коммуникации
       telegram-desktop
