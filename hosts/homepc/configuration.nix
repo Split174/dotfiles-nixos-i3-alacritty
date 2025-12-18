@@ -50,6 +50,9 @@
     };
   };
 
+  # ssh-agent
+  programs.ssh.startAgent = true;
+
   # Docker
   virtualisation.docker = {
     enable = true;
