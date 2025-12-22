@@ -184,6 +184,7 @@
 
       # Разработка
       wayback_machine_downloader
+      tmux
       code-cursor
       yamlfmt
       alacritty
