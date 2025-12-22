@@ -27,7 +27,7 @@
   };
 
   # System Configuration
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.11";
   nixpkgs.config.allowUnfree = true;
   environment.pathsToLink = ["/libexec"]; # links /libexec from derivations to /run/current-system/sw
 
@@ -43,7 +43,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 30d";
+      options = "--delete-older-than 7d";
     };
     settings = {
       tarball-ttl = 0;
@@ -115,7 +115,7 @@
   };
 
   # Sound
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   services.pipewire = {
@@ -136,6 +136,14 @@
 
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
+
+  security.wrappers."secure-keepass-fuse" = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_ipc_lock=+ep";
+
+    source = "${pkgs.mynur.secure-keepass-fuse}/bin/secure-keepass-fuse";
+  };
 
   users.users.serj = {
     isNormalUser = true;
@@ -188,6 +196,8 @@
       gopls
       gotools
       kubectl
+      fluxcd
+      k0sctl
       argocd-vault-plugin
       kustomize_4
       sqlite
@@ -211,12 +221,14 @@
       vlc
       onlyoffice-desktopeditors
       simplescreenrecorder
+      asciinema
 
       # Игры
       steam
 
       # Офисные программы
       keepassxc
+      mynur.secure-keepass-fuse
 
       # Файловые менеджеры и другие
       networkmanagerapplet
@@ -257,7 +269,7 @@
 
   # Fonts
   fonts.packages = with pkgs; [
-    nerdfonts
+    nerd-fonts.fira-code
   ];
 
   # Program Configurations

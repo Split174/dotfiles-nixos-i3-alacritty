@@ -6,7 +6,7 @@
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
-    extraFlags = ["--no-default-folder"];
+    #extraFlags = ["--no-default-folder"];
     user = "serj";
     overrideDevices = true;
     overrideFolders = true;
