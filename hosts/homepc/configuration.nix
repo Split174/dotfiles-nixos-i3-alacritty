@@ -54,15 +54,13 @@
   programs.ssh.startAgent = true;
 
   # Docker
-  virtualisation.docker = {
-    enable = true;
-    extraOptions = ''
-      --insecure-registry cr.10.144.144.2.sslip.io:80
-    '';
-  };
-
-  system.activationScripts."dockerLogin" = {
-    text = ''${pkgs.docker}/bin/docker login -u ${(import ../../secrets/secrets.nix).dockerUser} -p ${(import ../../secrets/secrets.nix).dockerPass}'';
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
+    };
   };
 
   # Networking
@@ -148,7 +146,7 @@
   users.users.serj = {
     isNormalUser = true;
     description = "serj";
-    extraGroups = ["networkmanager" "wheel" "docker"];
+    extraGroups = ["networkmanager" "wheel" "podman"];
 
     packages = with pkgs; [
       # Утилиты
