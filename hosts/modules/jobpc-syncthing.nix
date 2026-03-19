@@ -7,7 +7,7 @@
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
-    extraFlags = [ "--no-default-folder" ];
+    #extraFlags = [ "--no-default-folder" ];
     user = "serj";
     overrideDevices = true;     # overrides any devices added or deleted through the WebUI
     overrideFolders = true;     # overrides any folders added or deleted through the WebUI

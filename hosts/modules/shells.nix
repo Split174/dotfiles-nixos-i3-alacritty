@@ -28,31 +28,68 @@
       catfzf = "${pkgs.writeShellScriptBin "catfzf-script" ''
         #!${pkgs.bash}/bin/bash
 
-        # Аргументы pkgs.fzf и pkgs.bat гарантируют, что скрипт найдёт эти программы,
-        # даже если они не в PATH.
         FZF_BIN=${pkgs.fzf}/bin/fzf
         BAT_BIN=${pkgs.bat}/bin/bat
 
-        if ! command -v $FZF_BIN &> /dev/null; then
-            echo "Ошибка: fzf не найден." >&2
-            exit 1
-        fi
+        # Инициализация переменных по умолчанию
+        TARGET_DIR="."
+        SKIP_FZF=0
+        EXCLUDE_EXTENSIONS=()
 
-        TARGET_DIR="''${1:-.}" # Используем текущий каталог по умолчанию
+        # Разбор аргументов командной строки
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                --folder)
+                    SKIP_FZF=1
+                    TARGET_DIR="$2"
+                    shift 2
+                    ;;
+                --exclude-extension)
+                    EXCLUDE_EXTENSIONS+=("$2")
+                    shift 2
+                    ;;
+                *)
+                    # Если передан просто путь (для обратной совместимости)
+                    TARGET_DIR="$1"
+                    shift
+                    ;;
+            esac
+        done
 
         if [ ! -d "$TARGET_DIR" ]; then
             echo "Ошибка: Каталог '$TARGET_DIR' не найден." >&2
             exit 1
         fi
 
-        selected_files=$(find "$TARGET_DIR" \( -name .git -type d \) -prune -o -type f -print | $FZF_BIN --multi --preview "$BAT_BIN --color=always {} || cat {}")
+        # Формируем дополнительные аргументы для find, чтобы исключить расширения
+        FIND_ARGS=()
+        for ext in "''${EXCLUDE_EXTENSIONS[@]}"; do
+            # Удаляем точку в начале, если пользователь ввёл её (--exclude-extension .txt)
+            ext="''${ext#.}"
+            FIND_ARGS+=( "!" "-iname" "*.$ext" )
+        done
+
+        # Получаем список файлов
+        if [ "$SKIP_FZF" -eq 1 ]; then
+            # Просто берем все файлы рекурсивно, исключая директорию .git и нужные расширения
+            selected_files=$(find "$TARGET_DIR" -type d -name .git -prune -o -type f "''${FIND_ARGS[@]}" -print)
+        else
+            # Проверяем fzf только если он нам нужен
+            if ! command -v $FZF_BIN &> /dev/null; then
+                echo "Ошибка: fzf не найден." >&2
+                exit 1
+            fi
+            
+            selected_files=$(find "$TARGET_DIR" -type d -name .git -prune -o -type f "''${FIND_ARGS[@]}" -print | $FZF_BIN --multi --preview "$BAT_BIN --color=always {} || cat {}")
+        fi
 
         if [ -z "$selected_files" ]; then
-            echo "Выбор отменен."
+            echo "Выбор отменен ни один файл не найден/не выбран."
             exit 0
         fi
 
         # Вывод результатов
+        # Используем перенос строки как разделитель, чтобы файлы с пробелами обрабатывались корректно
         IFS=$'\n'
         for file in $selected_files; do
             echo "''${file}:"
@@ -63,6 +100,7 @@
             echo ""
         done
       ''}/bin/catfzf-script";
+
     };
 
     ohMyZsh = {

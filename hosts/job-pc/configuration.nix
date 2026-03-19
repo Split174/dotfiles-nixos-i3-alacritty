@@ -126,6 +126,16 @@
 
   services.tailscale.enable = true;
   services.netbird.enable = true;
+
+  security.wrappers."secure-keepass-fuse" = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_ipc_lock=+ep";
+
+    source = "${pkgs.mynur.secure-keepass-fuse}/bin/secure-keepass-fuse";
+  };
+
+
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
   users.users.serj = {
@@ -153,6 +163,7 @@
       # --- Терминал и оболочка
       alacritty
       zsh
+      zenity
       fzf
 
       # --- Файловые менеджеры и редакторы
@@ -170,6 +181,7 @@
       # --- Безопасность и хранение секретов
       envsubst
       keepassxc
+      mynur.secure-keepass-fuse
       #keepass-keeagent
       (pkgs.pass.withExtensions (exts: [ exts.pass-otp ]))
       age
@@ -185,6 +197,7 @@
       flameshot
 
       # --- DevOps, CI/CD, облако, инфраструктура
+      fluxcd
       argocd
       rsync
       argocd-autopilot
@@ -197,6 +210,8 @@
       yandex-cloud
       kustomize_4
       kubectl
+      kubectl-gadget
+      k0sctl
       kubeconform
       (pkgs.wrapHelm pkgs.kubernetes-helm {
         plugins = [pkgs.kubernetes-helmPlugins.helm-diff];
@@ -205,7 +220,6 @@
       k3d
       k9s
       kompose
-      #mynur.unregistry
       opentofu
       terraform
       restic
@@ -216,13 +230,14 @@
 
       # --- Разработка и программирование
       #unstable.zed-editor
-      ollama
+      #distrobox
       gotty
       git
       gnumake
       go
       gopls
       gotools
+      helix
       obsidian
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
@@ -255,17 +270,17 @@
   };
 
   # Environment Variables
-  environment.variables = rec {
+  environment.sessionVariables = rec {
     GIT_AUTHOR_NAME = "Split174";
     GIT_AUTHOR_EMAIL = "sergei.popov174@gmail.com";
     GIT_COMMITTER_NAME = "Split174";
     GIT_COMMITTER_EMAIL = "sergei.popov174@gmail.com";
+    EDITOR = "hx";
+    VISUAL = "hx";
   };
 
   # Fonts
-  fonts.packages = with pkgs; [
-    nerdfonts
-  ];
+  fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 
   # Program Configurations
   programs = {
@@ -279,6 +294,11 @@
         # thunar-volman
       ];
     };
+  };
+
+  programs = {
+    direnv.enable = true;
+    direnv.enableZshIntegration = true;
   };
 
   # System Packages
