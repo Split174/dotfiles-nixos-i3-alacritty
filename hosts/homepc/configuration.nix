@@ -10,9 +10,9 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../apps/node-exporter.nix
     ./../modules/shells.nix
     ./../modules/homepc-syncthing.nix
+    ./../modules/ygg.nix
     #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
     #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
     #})
@@ -43,7 +43,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 7d";
+      options = "--delete-older-than 1d";
     };
     settings = {
       tarball-ttl = 0;
@@ -54,20 +54,15 @@
   programs.ssh.startAgent = true;
 
   # Docker
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
-    };
+  virtualisation.docker = {
+    enable = true;
   };
 
   # Networking
   networking = {
     hostName = "homepc"; # Define your hostname.
     networkmanager.enable = true;
-    #extraHosts = "${(import ../../secrets/secrets.nix).extraHostsJob}";
+    #extraHosts = "${(import ../../secrets/secrets.nix).stHostsJob}";
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -128,9 +123,11 @@
   # Printing
 
   services.netbird.enable = true;
-  services.printing.enable = true;
+  #services.printing.enable = true;
 
-  services.tailscale.enable = true;
+  #services.tailscale.enable = true;
+
+  services.earlyoom.enable = true;
 
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
@@ -146,7 +143,7 @@
   users.users.serj = {
     isNormalUser = true;
     description = "serj";
-    extraGroups = ["networkmanager" "wheel" "podman"];
+    extraGroups = ["networkmanager" "wheel" "docker"];
 
     packages = with pkgs; [
       # Утилиты
@@ -169,8 +166,6 @@
       terraform
       pre-commit
       fzf
-      discord
-      sniffnet
 
       # Секерты
       sops
@@ -181,9 +176,7 @@
       pass
 
       # Разработка
-      wayback_machine_downloader
       tmux
-      code-cursor
       yamlfmt
       alacritty
       git
@@ -195,6 +188,7 @@
       gopls
       gotools
       kubectl
+      kubectl-gadget
       fluxcd
       k0sctl
       argocd-vault-plugin
@@ -207,7 +201,6 @@
       k3d
       k9s
       argocd-autopilot
-      kubebuilder
 
       # Коммуникации
       telegram-desktop
@@ -220,7 +213,6 @@
       vlc
       onlyoffice-desktopeditors
       simplescreenrecorder
-      asciinema
 
       # Игры
       steam
@@ -230,6 +222,7 @@
       mynur.secure-keepass-fuse
 
       # Файловые менеджеры и другие
+      zenity
       networkmanagerapplet
       networkmanager-openconnect
       xfce.thunar
@@ -237,6 +230,7 @@
       # Сеть
       #easytier
       wireguard-tools
+      amnezia-vpn
       mynur.dnsr
       mynur.kgb
 
@@ -272,6 +266,9 @@
   ];
 
   # Program Configurations
+
+  programs.direnv.enable = true;
+
   programs.gnupg.agent = {
     enable = true;
   };
@@ -291,11 +288,6 @@
 
   # System Packages
   environment.systemPackages = with pkgs; [
-    # vim
-    # wget
-    # vscode
-    # i3status
-    helix
   ];
 
   # Optional Configurations (commented out)
