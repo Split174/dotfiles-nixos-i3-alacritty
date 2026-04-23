@@ -23,6 +23,10 @@
       mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
         inherit pkgs;
       };
+
+      #unstable = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+      #  inherit pkgs;
+      #};
     };
   };
 
@@ -229,6 +233,7 @@
 
       # Сеть
       #easytier
+      alfis
       wireguard-tools
       amnezia-vpn
       mynur.dnsr
@@ -236,6 +241,7 @@
 
       # IDE и текстовые редакторы
       obsidian
+      #unstable.kilocode-cli
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           jnoortheen.nix-ide
@@ -243,8 +249,7 @@
           golang.go
           kamadorueda.alejandra
           tim-koehler.helm-intellisense
-          phind.phind
-          continue.continue
+          #kilocode.kilo-code
           hashicorp.terraform
           ms-python.python
         ];
