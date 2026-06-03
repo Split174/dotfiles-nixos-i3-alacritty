@@ -21,9 +21,9 @@
       mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
         inherit pkgs;
       };
-      #unstable = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/tarball/nixos-unstable") {
-      #  inherit pkgs;
-      #};
+      unstable = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/tarball/nixos-unstable") {
+        inherit pkgs;
+      };
     };
   };
 
@@ -59,9 +59,9 @@
   networking = {
     hostName = "jobpc"; # Define your hostname.
     networkmanager.enable = true;
-    extraHosts = ''
-    ${(import ../../secrets/secrets.nix).extraHostsJob}
-    '';
+    #extraHosts = ''
+    #${(import ../../secrets/secrets.nix).hostsST}
+    #'';
     #extraHosts = ''
     #127.0.0.1 dex
     #'';
@@ -159,6 +159,8 @@
       arandr
       pwvucontrol
       libnotify
+      smartmontools
+      nvme-cli
 
       # --- Терминал и оболочка
       alacritty
@@ -197,6 +199,7 @@
       flameshot
 
       # --- DevOps, CI/CD, облако, инфраструктура
+      alfis
       fluxcd
       argocd
       rsync
@@ -231,6 +234,7 @@
       # --- Разработка и программирование
       #unstable.zed-editor
       #distrobox
+      appimage-run
       gotty
       git
       gnumake
@@ -239,6 +243,8 @@
       gotools
       helix
       obsidian
+      unstable.zed-editor
+      unstable.opencode
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           bbenoist.nix
