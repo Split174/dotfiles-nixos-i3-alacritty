@@ -13,9 +13,6 @@
     ./../modules/shells.nix
     ./../modules/homepc-syncthing.nix
     ./../modules/ygg.nix
-    #(import ../../apps/easytier.nix {inherit config pkgs lib;} {
-    #  easytierArgs = "-d --network-name ${(import ../../secrets/secrets.nix).easytierName} --network-secret ${(import ../../secrets/secrets.nix).easytierSecret} -p udp://89.110.119.238:11010";
-    #})
   ];
 
   nixpkgs.config = {
@@ -24,9 +21,9 @@
         inherit pkgs;
       };
 
-      #unstable = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
-      #  inherit pkgs;
-      #};
+      unstable = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+        inherit pkgs;
+      };
     };
   };
 
@@ -49,9 +46,9 @@
       dates = "weekly";
       options = "--delete-older-than 1d";
     };
-    settings = {
-      tarball-ttl = 0;
-    };
+    #settings = {
+    #  tarball-ttl = 0;
+    #};
   };
 
   # ssh-agent
@@ -129,9 +126,38 @@
   services.netbird.enable = true;
   #services.printing.enable = true;
 
-  #services.tailscale.enable = true;
+  services.tailscale.enable = true;
 
   services.earlyoom.enable = true;
+
+  services.zapret = {
+    enable = true;
+
+    httpMode = "first";
+
+    httpSupport = true;
+    udpSupport = true;
+
+    udpPorts = ["80" "443" "1024:65535"];
+
+    configureFirewall = true;
+
+    whitelist = [
+      "compute-1.amazonaws.com"
+      "cloudfront.net"
+      "youtube.com"
+      "googlevideo.com"
+      "ytimg.com"
+      "youtu.be"
+    ];
+
+    params = [
+      "--dpi-desync=fake,split2"
+      "--dpi-desync-split-pos=midsplit"
+      "--dpi-desync-repeats=6"
+      "--dpi-desync-fooling=badseq,badsum"
+    ];
+  };
 
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
@@ -168,7 +194,9 @@
       yandex-cloud
       opentofu
       terraform
+      crane
       pre-commit
+      nvme-cli
       fzf
 
       # Секерты
@@ -177,7 +205,6 @@
       pinentry-all
       age
       detect-secrets
-      pass
 
       # Разработка
       tmux
@@ -233,6 +260,7 @@
 
       # Сеть
       #easytier
+      #unstable.zapret2
       alfis
       wireguard-tools
       amnezia-vpn
@@ -241,7 +269,7 @@
 
       # IDE и текстовые редакторы
       obsidian
-      #unstable.kilocode-cli
+      unstable.zed-editor-fhs
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           jnoortheen.nix-ide
