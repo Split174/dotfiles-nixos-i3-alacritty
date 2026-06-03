@@ -1,0 +1,25 @@
+# ../modules/k9s-plugins.yaml
+plugins:
+  flux-reconcile:
+    command: bash
+    args:
+      - -c
+      - |
+        case "$RESOURCE_NAME" in
+          gitrepositories)  CMD="source git" ;;
+          ocirepositories)  CMD="source oci" ;;
+          buckets)          CMD="source bucket" ;;
+          helmrepositories) CMD="source helm" ;;
+          kustomizations)   CMD="kustomization" ;;
+          helmreleases)     CMD="helmrelease" ;;
+          *)                CMD="${RESOURCE_NAME%s}" ;;
+        esac
+        flux reconcile $CMD $NAME -n $NAMESPACE 2>&1 | less
+    shortCut: Shift-R
+    description: Flux Reconcile
+    scopes:
+      - kustomization
+      - helmrelease
+      - gitrepository
+      - ocirepository
+      - bucket
