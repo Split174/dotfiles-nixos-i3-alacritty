@@ -13,6 +13,7 @@
     ./../modules/shells.nix
     ./../modules/homepc-syncthing.nix
     ./../modules/ygg.nix
+    ./../modules/hjem.nix
   ];
 
   nixpkgs.config = {
@@ -130,35 +131,6 @@
 
   services.earlyoom.enable = true;
 
-  services.zapret = {
-    enable = true;
-
-    httpMode = "first";
-
-    httpSupport = true;
-    udpSupport = true;
-
-    udpPorts = ["80" "443" "1024:65535"];
-
-    configureFirewall = true;
-
-    whitelist = [
-      "compute-1.amazonaws.com"
-      "cloudfront.net"
-      "youtube.com"
-      "googlevideo.com"
-      "ytimg.com"
-      "youtu.be"
-    ];
-
-    params = [
-      "--dpi-desync=fake,split2"
-      "--dpi-desync-split-pos=midsplit"
-      "--dpi-desync-repeats=6"
-      "--dpi-desync-fooling=badseq,badsum"
-    ];
-  };
-
   # User Configuration
   users.defaultUserShell = pkgs.zsh;
 
@@ -260,7 +232,6 @@
 
       # Сеть
       #easytier
-      #unstable.zapret2
       alfis
       wireguard-tools
       amnezia-vpn
@@ -322,16 +293,4 @@
   # System Packages
   environment.systemPackages = with pkgs; [
   ];
-
-  # Optional Configurations (commented out)
-  # services.xserver.libinput.enable = true;
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-  # services.openssh.enable = true;
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # networking.firewall.enable = false;
 }
