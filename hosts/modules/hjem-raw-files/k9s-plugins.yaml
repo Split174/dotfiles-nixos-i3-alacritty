@@ -23,25 +23,25 @@ plugins:
       - gitrepository
       - ocirepository
       - bucket
-crossplane-event:
-  command: bash
-  args:
-    - -c
-    - |
-      NS=""
-      [ -n "$NAMESPACE" ] && NS="-n $NAMESPACE"
-      {
-        echo "=================== EVENTS ==================="
-        kubectl get events --all-namespaces \
-          --field-selector involvedObject.name=$NAME,involvedObject.kind=$RESOURCE_NAME \
-          --sort-by='.lastTimestamp'
-        echo ""
-        echo "=================== STATUS ==================="
-        kubectl get $RESOURCE_NAME $NAME $NS -o yaml | yq '.status'
-      } 2>&1 | less
-  shortCut: Shift-E
-  description: Crossplane Events + Status
-  scopes:
-    - ansibleruns
-    - providerconfigs
-    - cluster
+	crossplane-event:
+	  command: bash
+	  args:
+	    - -c
+	    - |
+	      NS=""
+	      [ -n "$NAMESPACE" ] && NS="-n $NAMESPACE"
+	      {
+	        echo "=================== EVENTS ==================="
+	        kubectl get events --all-namespaces \
+	          --field-selector involvedObject.name=$NAME,involvedObject.kind=$RESOURCE_NAME \
+	          --sort-by='.lastTimestamp'
+	        echo ""
+	        echo "=================== STATUS ==================="
+	        kubectl get $RESOURCE_NAME $NAME $NS -o yaml | yq '.status'
+	      } 2>&1 | less
+	  shortCut: Shift-E
+	  description: Crossplane Events + Status
+	  scopes:
+	    - ansibleruns
+	    - providerconfigs
+	    - cluster
