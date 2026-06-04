@@ -36,6 +36,7 @@
   services.resolved.enable = true;
 
   # Boot Configuration
+  boot.extraModulePackages = [ config.boot.kernelPackages.amneziawg ];
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -179,6 +180,7 @@
       detect-secrets
 
       # Разработка
+      stern
       tmux
       yamlfmt
       alacritty

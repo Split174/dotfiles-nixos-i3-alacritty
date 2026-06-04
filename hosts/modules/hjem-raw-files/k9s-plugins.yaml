@@ -45,3 +45,47 @@ plugins:
       - ansibleruns
       - providerconfigs
       - cluster
+
+  stern-logs:
+    shortCut: Ctrl-L
+    description: "Stern logs (fzf: search/wrap/copy)"
+    scopes:
+      - pods
+    background: false
+    command: bash
+    args:
+      - -c
+      - |
+        # --- clipboard helper ---
+        # ВАЖНО: оборачиваем так, чтобы процесс-владелец selection
+        # пережил завершение fzf (иначе X11 буфер теряется).
+        if command -v pbcopy >/dev/null 2>&1; then
+          clip() { pbcopy; }                                    # macOS: не форкается, ок
+        elif command -v wl-copy >/dev/null 2>&1; then
+          clip() { wl-copy; }                                   # Wayland: wl-copy сам демонизируется корректно
+        elif command -v xclip >/dev/null 2>&1; then
+          clip() { setsid -f xclip -selection clipboard >/dev/null 2>&1; }
+        elif command -v xsel >/dev/null 2>&1; then
+          clip() { setsid -f xsel --clipboard --input >/dev/null 2>&1; }
+        else
+          clip() { cat > /tmp/k9s-stern-clip.txt; }
+        fi
+        export -f clip
+
+        DEFAULT_HEADER='TAB=multi-select | type=fuzzy | ENTER=copy selected | ESC=quit'
+
+        stern \
+          --context "$CONTEXT" \
+          --namespace "$NAMESPACE" \
+          "$NAME" \
+          --color always \
+          --tail 1000 \
+          --template '{{.PodName}} {{.ContainerName}} {{.Message}}{{"\n"}}' \
+        2>&1 | fzf \
+          --ansi --no-sort --tac --tail 100000 \
+          --multi --wrap --layout=reverse --info=inline \
+          --header "$DEFAULT_HEADER" \
+          --prompt "logs:$NAME> " \
+          --bind "enter:execute-silent(printf '%s\n' {+} | bash -c clip)+transform-header(n=\$(printf '%s\n' {+} | grep -c .); echo \"✓ copied \$n line(s) to clipboard\")" \
+          --bind 'esc:abort' \
+          --bind 'ctrl-c:abort'
