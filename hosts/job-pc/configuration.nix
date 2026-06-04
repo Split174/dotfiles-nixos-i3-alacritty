@@ -39,12 +39,13 @@
       dates = "weekly";
       options = "--delete-older-than 60d";
     };
-    #settings = {
-    #  tarball-ttl = 0;
-    #};
+    settings = {
+      tarball-ttl = 0;
+    };
   };
 
   # Boot Configuration
+  boot.extraModulePackages = [ config.boot.kernelPackages.amneziawg ];
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -265,7 +266,7 @@
       # --- Сетевые утилиты и VPN
       wireshark
       winbox4
-      doggo
+      doggo # like dig but rust
       wireguard-tools
       wg-netmanager
       netbird
