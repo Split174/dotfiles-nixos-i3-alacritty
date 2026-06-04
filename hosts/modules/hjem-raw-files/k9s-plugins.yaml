@@ -89,3 +89,95 @@ plugins:
           --bind "enter:execute-silent(printf '%s\n' {+} | bash -c clip)+transform-header(n=\$(printf '%s\n' {+} | grep -c .); echo \"✓ copied \$n line(s) to clipboard\")" \
           --bind 'esc:abort' \
           --bind 'ctrl-c:abort'
+
+  krasivo:
+    shortCut: Shift-K
+    description: "✨ Krasivo ✨"
+    scopes:
+      - all
+    command: bash
+    background: false
+    args:
+      - -c
+      - |
+        RESET=$'\033[0m'; BOLD=$'\033[1m'; CYAN=$'\033[36m'
+        GREEN=$'\033[32m'; RED=$'\033[31m'; YELLOW=$'\033[33m'; DIM=$'\033[2m'
+
+        # Восстанавливаем курсор и чистим экран при выходе
+        trap 'tput cnorm; clear; exit 0' INT TERM
+        tput civis
+
+        # Проверка наличия бинарей
+        HAVE_FLUX=0; HAVE_KUBECTL=0
+        command -v flux    >/dev/null 2>&1 && HAVE_FLUX=1
+        command -v kubectl >/dev/null 2>&1 && HAVE_KUBECTL=1
+
+        flux_block() {
+          local kind="$1" title="$2"
+          printf '%s━━━ %s ━━━%s\n' "$BOLD$CYAN" "$title" "$RESET"
+          if [ "$HAVE_FLUX" -ne 1 ]; then
+            printf '  %s✗ flux not found%s\n\n' "$RED" "$RESET"
+            return
+          fi
+          flux get "$kind" -A --no-header 2>/dev/null | while IFS= read -r line; do
+            # Ищем точное слово True/False среди полей (не в MESSAGE),
+            # ориентируясь на колонку READY (предпоследняя смысловая).
+            # Берём 5-е поле как READY:
+            ready=$(printf '%s' "$line" | awk '{print $5}')
+            case "$ready" in
+              True)  printf '  %s●%s %s\n' "$GREEN" "$RESET" "$line" ;;
+              False) printf '  %s✗ %s%s\n' "$RED" "$line" "$RESET" ;;
+              *)     printf '  %s… %s%s\n' "$YELLOW" "$line" "$RESET" ;;
+            esac
+          done
+          printf '\n'
+        }
+
+        ansible_block() {
+          printf '%s━━━ ANSIBLERUNS ━━━%s\n' "$BOLD$CYAN" "$RESET"
+          if [ "$HAVE_KUBECTL" -ne 1 ]; then
+            printf '  %s✗ kubectl not found%s\n\n' "$RED" "$RESET"
+            return
+          fi
+          kubectl get ansibleruns -A --no-headers 2>/dev/null | while IFS= read -r line; do
+            printf '  %s●%s %s\n' "$GREEN" "$RESET" "$line"
+          done
+          printf '\n'
+        }
+
+        top_block() {
+          printf '%s━━━ TOP 10 PODS (CPU) ━━━%s\n' "$BOLD$CYAN" "$RESET"
+          if [ "$HAVE_KUBECTL" -ne 1 ]; then
+            printf '  %s✗ kubectl not found%s\n' "$RED" "$RESET"
+            return
+          fi
+          # Нормализуем CPU в millicores для корректной сортировки:
+          #   "100m" -> 100 ; "2" (ядра) -> 2000
+          kubectl top pods -A --no-headers 2>/dev/null \
+            | awk '{
+                cpu=$3;
+                if (cpu ~ /m$/) { sub(/m$/,"",cpu); }
+                else            { cpu=cpu*1000; }
+                printf "%d\t%s\n", cpu, $0;
+              }' \
+            | sort -rn | head -n 10 | cut -f2- \
+            | awk '{printf "  \033[33m%-25s\033[0m %-30s \033[1m%8s\033[0m  %s\n", $1, $2, $3, $4}'
+        }
+
+        while true; do
+          # Собираем кадр в переменную и печатаем разом —
+          # это убирает мигание при clear
+          frame=""
+          frame+="$BOLD$CYAN✨ KRASIVO ✨$RESET  $DIM$(date '+%H:%M:%S')   (Ctrl+C to exit)$RESET"$'\n\n'
+          frame+="$(flux_block kustomizations 'KUSTOMIZATIONS')"$'\n'
+          frame+="$(flux_block helmreleases   'HELMRELEASES')"$'\n'
+          frame+="$(ansible_block)"$'\n'
+          frame+="$(top_block)"
+
+          # Перемещаем курсор в начало вместо полного clear (меньше мерцания)
+          tput cup 0 0
+          tput ed            # стираем всё от курсора до конца экрана
+          printf '%s\n' "$frame"
+
+          sleep 3
+        done
