@@ -102,7 +102,7 @@
       enable = true;
       extraPackages = with pkgs; [
         rofi
-        polybar
+        polybarFull
         i3lock
         dmenu
       ];

@@ -39,6 +39,11 @@ in
         clobber = true;
         source = ./hjem-raw-files/polybar.ini;
       };
+
+      "polybar/launch.sh" = {
+        clobber = true;
+        source = ./hjem-raw-files/polybar-launch.sh;
+      };
     };
   };
 }

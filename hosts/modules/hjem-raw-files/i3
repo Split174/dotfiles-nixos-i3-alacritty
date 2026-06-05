@@ -73,7 +73,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id setcursor
-exec_always --no-startup-id "pkill -x polybar; sleep 0.3; polybar main"
+exec_always --no-startup-id "bash ~/.config/polybar/launch.sh"
 exec_always --no-startup-id numlockx on
 exec blueberry-tray
 exec --no-startup-id java -Xmx1024m -jar "/opt/xdman/xdman.jar" -m
