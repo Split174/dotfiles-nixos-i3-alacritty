@@ -16,6 +16,18 @@
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+
+    histSize = 100000;
+      histFile = "$HOME/.zsh_history";
+      setOptions = [
+        "HIST_IGNORE_DUPS"
+        "SHARE_HISTORY"
+        "APPEND_HISTORY"
+        "INC_APPEND_HISTORY"
+        "HIST_IGNORE_SPACE"
+        "EXTENDED_HISTORY"
+      ];
+
     shellInit = ''
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh) --cmd cd"
     '';
@@ -79,7 +91,7 @@
                 echo "Ошибка: fzf не найден." >&2
                 exit 1
             fi
-            
+
             selected_files=$(find "$TARGET_DIR" -type d -name .git -prune -o -type f "''${FIND_ARGS[@]}" -print | $FZF_BIN --multi --preview "$BAT_BIN --color=always {} || cat {}")
         fi
 

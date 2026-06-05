@@ -73,7 +73,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id setcursor
-#exec_always --no-startup-id ${HOME}/.config/polybar/launch.sh
+exec_always --no-startup-id "pkill -x polybar; sleep 0.3; polybar main"
 exec_always --no-startup-id numlockx on
 exec blueberry-tray
 exec --no-startup-id java -Xmx1024m -jar "/opt/xdman/xdman.jar" -m
@@ -227,29 +227,6 @@ bindsym $super+u border none
 bindsym $super+y border pixel 1
 bindsym $super+n border normal
 
-
-# panel
-# Start i3bar to display a workspace bar
-
-bar {
-    font pango:SauceCodePro Nerd Font 12.000000
-	status_command i3status
-	#strip_workspace_numbers yes|no
-	#strip_workspace_name yes|no
-	colors {
-    background #2f343f
-    statusline #FFFFFF
-    separator  #666666
-
-    focused_workspace  #4C7899 #285577 #FFFFFF
-    active_workspace   #333333 #222222 #FFFFFF
-    inactive_workspace #333333 #222222 #888888
-    urgent_workspace   #2F343A #900000 #FFFFFF
-    #binding_mode      #2F343A #900000 #FFFFFF
-    # colour of border, background, and text
-    }
-
-} 
 
 # Open specific applications in floating mode
 for_window [title="alsamixer"] floating enable border pixel 1

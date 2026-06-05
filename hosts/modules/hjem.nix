@@ -35,9 +35,9 @@ in
         source = ./hjem-raw-files/i3;
       };
 
-      "i3status/config" = {
+      "polybar/config.ini" = {
         clobber = true;
-        source = ./hjem-raw-files/i3status;
+        source = ./hjem-raw-files/polybar.ini;
       };
     };
   };

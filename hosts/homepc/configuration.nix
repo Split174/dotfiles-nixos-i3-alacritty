@@ -102,9 +102,8 @@
       enable = true;
       extraPackages = with pkgs; [
         rofi
-        i3status
+        polybar
         i3lock
-        i3blocks
         dmenu
       ];
     };
