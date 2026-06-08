@@ -39,9 +39,9 @@
       dates = "weekly";
       options = "--delete-older-than 60d";
     };
-    settings = {
-      tarball-ttl = 0;
-    };
+    #settings = {
+    #  tarball-ttl = 0;
+    #};
   };
 
   # Boot Configuration
@@ -207,8 +207,8 @@
       argocd-autopilot
       argocd-vault-plugin
       jq
-      pre-commit
-      yq
+      lefthook
+      yq-go
       yamllint
       yamlfmt
       yandex-cloud
