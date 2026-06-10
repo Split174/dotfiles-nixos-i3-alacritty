@@ -14,7 +14,7 @@ plugins:
           helmreleases)     CMD="helmrelease" ;;
           *)                CMD="${RESOURCE_NAME%s}" ;;
         esac
-        flux reconcile $CMD $NAME -n $NAMESPACE 2>&1 | less
+        flux reconcile $CMD $NAME -n $NAMESPACE --with-source 2>&1 | less
     shortCut: Shift-R
     description: Flux Reconcile
     scopes:
