@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  hjem-src = builtins.fetchTarball "https://github.com/feel-co/hjem/archive/main.tar.gz";
+  hjem-src = builtins.fetchTarball "https://github.com/feel-co/hjem/archive/999c659fb45b98f0492c79bd12d76ffa620400aa.tar.gz";
   hjem = import hjem-src { inherit pkgs; };
 in
 {

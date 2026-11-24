@@ -1,0 +1,9 @@
+keys:
+  - &serj age1444y6glzmnwdgsnmkv47kakfekxrpt6ljvd9wlwlp5rmgmwd5fcqwg544t
+
+creation_rules:
+  # Всё, что лежит в secrets/ и похоже на файл секретов, шифруется на ключ serj.
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *serj

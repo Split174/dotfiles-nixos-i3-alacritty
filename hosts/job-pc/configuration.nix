@@ -10,6 +10,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./../modules/sops.nix
     ./../modules/shells.nix
     ./../modules/jobpc-syncthing.nix
     ./../modules/hjem.nix

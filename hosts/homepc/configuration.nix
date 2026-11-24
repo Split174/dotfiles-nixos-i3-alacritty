@@ -10,6 +10,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./../modules/sops.nix
+    ./../modules/xray.nix
     ./../modules/shells.nix
     ./../modules/homepc-syncthing.nix
     ./../modules/ygg.nix
@@ -23,7 +25,8 @@
       };
 
       unstable = import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
-        inherit pkgs;
+        inherit (pkgs) system;
+        config.allowUnfree = true;
       };
     };
   };
@@ -43,22 +46,37 @@
   };
 
   nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+
+      max-jobs = 1;
+      cores = 2;
+      connect-timeout = 15;
+    };
+
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 1d";
+      options = "--delete-older-than 60d";
     };
-    #settings = {
-    #  tarball-ttl = 0;
-    #};
   };
 
   # ssh-agent
   programs.ssh.startAgent = true;
 
-  # Docker
   virtualisation.docker = {
     enable = true;
+    daemon.settings = {
+    	runtimes = {
+        runsc = {
+        	path = "${pkgs.gvisor}/bin/runsc";
+         	runtimeArgs = [ "--net-raw" ];
+        };
+      };
+    };
   };
 
   # Networking
@@ -66,6 +84,9 @@
     hostName = "homepc"; # Define your hostname.
     networkmanager.enable = true;
     #extraHosts = "${(import ../../secrets/secrets.nix).stHostsJob}";
+    #extraHosts = "
+    #	127.0.0.1 kanbanchik.localhost dex.localhost
+    #";
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -150,6 +171,7 @@
       # Утилиты
       neofetch
       wget
+      arandr
       curl
       jq
       yq
@@ -169,6 +191,11 @@
       pre-commit
       nvme-cli
       fzf
+      dmidecode
+
+      # Виртуализация
+      gvisor
+      xdg-utils
 
       # Секерты
       sops
@@ -178,6 +205,7 @@
       detect-secrets
 
       # Разработка
+      go-task
       stern
       tmux
       yamlfmt
@@ -232,11 +260,14 @@
 
       # Сеть
       #easytier
+      #rustdesk
+      #anydesk
       alfis
       wireguard-tools
       amnezia-vpn
       mynur.dnsr
       mynur.kgb
+
 
       # IDE и текстовые редакторы
       obsidian
@@ -271,6 +302,12 @@
 
   # Program Configurations
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    openssl
+  ];
   programs.direnv.enable = true;
 
   programs.gnupg.agent = {

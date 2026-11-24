@@ -1,2 +1,7 @@
-secrets/
+# Открытые секреты — не коммитим никогда.
 secrets.nix
+
+# В secrets/ всё зашифровано и должно попадать в git, кроме локальных копий.
+secrets/*
+!secrets/secrets.yaml
+!secrets/secrets.example.yaml
