@@ -10,13 +10,20 @@ VPS_HOST = vdsina01@89.110.119.238
 # Переменные для MINIPC
 MINIPC_HOST = minipc@192.168.1.200
 
-.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild add-channel-vps add-channel-minipc sops-init sops-edit sops-update sops-rekey
+# Первой сборке нужны flakes и бинарный кэш Pi, пока они ещё не прописаны в системе.
+AI_NIX_OPTIONS = --option extra-experimental-features 'nix-command flakes' --option extra-substituters 'https://cache.numtide.com' --option extra-trusted-public-keys 'niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g='
+
+.PHONY: deploy-vps deploy-minipc check-vps check-minipc clean-vps clean-minipc diff-vps diff-minipc mypc-rebuild homepc-rebuild jobpc-rebuild ai-update add-channel-vps add-channel-minipc sops-init sops-edit sops-update sops-rekey
 
 jobpc-rebuild:
-	sudo nixos-rebuild switch -I nixos-config=./hosts/job-pc/configuration.nix
+	sudo nixos-rebuild switch $(AI_NIX_OPTIONS) -I nixos-config=./hosts/job-pc/configuration.nix
 
 homepc-rebuild:
-	sudo nixos-rebuild switch -I nixos-config=./hosts/homepc/configuration.nix
+	sudo nixos-rebuild switch $(AI_NIX_OPTIONS) -I nixos-config=./hosts/homepc/configuration.nix
+
+# Обновить только закреплённые Pi и их зависимости, затем пересобрать хост.
+ai-update:
+	nix --extra-experimental-features 'nix-command flakes' flake update llm-agents --flake path:./flakes/ai
 
 # Команды для VPS
 deploy-vps:

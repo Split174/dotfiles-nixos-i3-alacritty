@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./../modules/sops.nix
     ./../modules/shells.nix
+    ./../modules/ai.nix
     ./../modules/jobpc-syncthing.nix
     ./../modules/hjem.nix
     #(import ../../apps/easytier.nix {inherit config pkgs lib;} {

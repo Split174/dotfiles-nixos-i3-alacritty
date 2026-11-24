@@ -33,8 +33,6 @@
     '';
 
     shellAliases = {
-    	pi = "nix shell nixpkgs#nodejs nixpkgs#bubblewrap nixpkgs#socat nixpkgs#ripgrep --command nix --accept-flake-config run 'github:numtide/llm-agents.nix#pi' -- ";
-     	pi-nono = "nix shell nixpkgs#nodejs nixpkgs#bubblewrap nixpkgs#socat nixpkgs#ripgrep nixpkgs#nono --command nono run --profile pi --allow-cwd -- nix --accept-flake-config run 'github:numtide/llm-agents.nix#pi' -- ";
       zcode ="${pkgs.vscode}/bin/code $(${pkgs.zoxide}/bin/zoxide query -i)";
 
       mfzf = ''mv "$(fzf --height=40% --reverse --preview 'cat {}')" "$(find / -type d 2>/dev/null | fzf --height=40% --reverse)"'';

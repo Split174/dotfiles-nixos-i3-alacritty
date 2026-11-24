@@ -13,6 +13,7 @@
     ./../modules/sops.nix
     ./../modules/xray.nix
     ./../modules/shells.nix
+    ./../modules/ai.nix
     ./../modules/homepc-syncthing.nix
     ./../modules/ygg.nix
     ./../modules/hjem.nix
