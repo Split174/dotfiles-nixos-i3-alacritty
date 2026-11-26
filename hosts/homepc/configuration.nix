@@ -6,7 +6,9 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  nurSrc = builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz";
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -17,11 +19,12 @@
     ./../modules/homepc-syncthing.nix
     ./../modules/ygg.nix
     ./../modules/hjem.nix
+    (nurSrc + "/modules/jbx.nix")
   ];
 
   nixpkgs.config = {
     packageOverrides = pkgs: {
-      mynur = import (builtins.fetchTarball "https://github.com/Split174/nur/archive/master.tar.gz") {
+      mynur = import nurSrc {
         inherit pkgs;
       };
 
@@ -268,6 +271,7 @@
       amnezia-vpn
       mynur.dnsr
       mynur.kgb
+      mynur.swamp
 
 
       # IDE и текстовые редакторы
@@ -303,6 +307,7 @@
 
   # Program Configurations
 
+  programs.jbx.enable = true;
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     stdenv.cc.cc
